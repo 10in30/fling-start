@@ -27,8 +27,9 @@
       <svg height="100%" width="100%" viewBox="0 0 800 388">
         <defs>
           <filter id="blur">
-            <feDropShadow dx="10" dy="10" stdDeviation="2" >
-              <animate attributeName="stdDeviation" values="2 0; 0 2; 2 0; 0 2; 2 0; " dur="10s" repeatCount="indefinite" fill="freeze" />
+            <feDropShadow dx="10" dy="10" stdDeviation="2">
+              <animate attributeName="stdDeviation" values="2 0; 0 2; 2 0; 0 2; 2 0; " dur="10s"
+                repeatCount="indefinite" fill="freeze" />
               <animate attributeName="dx" values="0;5;0;-5;0" dur="10s" repeatCount="indefinite" fill="freeze" />
               <animate attributeName="dy" values="5;0;-5;0;5" dur="10s" repeatCount="indefinite" fill="freeze" />
             </feDropShadow>
@@ -60,8 +61,8 @@
         </defs>
         <g filter="url(#loading-shader)" x="0" y="0" width="100%" height="100%">
           <rect id="stage" x="-400" y="-200" width="200vw" height="200vh" style="fill:#888899">
-              <animate attributeName="fill" values="grey; light grey; light blue; pink; grey" begin="3s"
-                dur="10s" repeatCount="indefinite" />
+            <animate attributeName="fill" values="grey; light grey; light blue; pink; grey" begin="3s" dur="10s"
+              repeatCount="indefinite" />
           </rect>
           <g width="100%" height="100%">
 
@@ -70,11 +71,8 @@
             </animateMotion> -->
             <animateTransform attributeName="transform" type="scale" values="0.8 0.8; 1 1; 0.9 0.9; 0.8 0.8;" dur="10s"
               repeatCount="indefinite" />
-            <animateTransform attributeName="transform" type="translate"
-            values="-50 200; 450 200; 450 200; 950 200;" dur="10s"
-      keyTimes="0; 0.2; 0.8; 1"
-      keySplines="0.1 0.8 0.2 1; 0.5 0 0.5 1; 0.5 0 0 1"
-      calcMode="spline"
+            <animateTransform attributeName="transform" type="translate" values="-50 200; 450 200; 450 200; 950 200;"
+              dur="10s" keyTimes="0; 0.2; 0.8; 1" keySplines="0.1 0.8 0.2 1; 0.5 0 0.5 1; 0.5 0 0 1" calcMode="spline"
               repeatCount="indefinite" />
             <!-- <animateTransform
       attributeName="transform"
@@ -84,34 +82,35 @@
       dur="15s"
       repeatCount="indefinite" /> -->
             <circle class="loadingCircle" r="20">
-              <animateMotion dur="5.6s" repeatCount="indefinite" begin="0"
-              keyTimes="0;  0.5; 1"
-              keySplines="0.1 0 0 0.1; 0.1 0 0 0.1;"
-              calcMode="spline"
-              >
+              <animateMotion dur="5.6s" repeatCount="indefinite" begin="0" keyTimes="0;  0.4; 1"
+                keySplines="0.1 0.1 0.1 0.1; 0.1 0.1 0.1 0.1;" calcMode="spline">
                 <mpath xlink:href="#circlepath4" />
               </animateMotion>
-              <animate attributeName="fill" values="red; orange; yellow; green; blue; indigo; violet; red;" begin="1s"
+              <animate attributeName="fill" values="red; orange; yellow; green; blue; indigo; violet; red;" begin="1.5s"
                 dur="10s" repeatCount="indefinite" />
               <animate attributeName="r" values="16;20;20;16" dur="5s" repeatCount="indefinite" />
-              <!-- <feDropShadow dx="5.5" dy="5.5" stdDeviation="10.5" /> -->
             </circle>
             <circle class="loadingCircle" r="20">
-              <animateMotion dur="5.6s" begin="0.8s" repeatCount="indefinite"
-              keyTimes="0;  0.5; 1"
-              keySplines="0.1 0 0 0.1; 0.1 0 0 0.1;"
-              calcMode="spline">
+              <animateMotion dur="5.6s" begin="0.8s" repeatCount="indefinite" keyTimes="0;  0.5; 1"
+                keySplines="0.1 0.1 0.1 0.1; 0.1 0.1 0.1 0.1;" calcMode="spline">
                 <mpath xlink:href="#circlepath4" />
               </animateMotion>
               <animate attributeName="r" values="16;20;20;16" dur="5s" repeatCount="indefinite" />
-              <animate attributeName="fill" values="red; orange; yellow; green; blue; indigo; violet; red;" begin="0.8s"
+              <animate attributeName="fill" values="red; orange; yellow; green; blue; indigo; violet; red;" begin="1.2s"
                 dur="10s" repeatCount="indefinite" />
             </circle>
             <circle class="loadingCircle" r="20">
-              <animateMotion dur="5.6s" begin="1.6s"
-              keyTimes="0;  0.5; 1"
-              keySplines="0.1 0 0 0.1; 0.1 0 0 0.1;"
-              calcMode="spline" repeatCount="indefinite" >
+              <animateMotion dur="5.6s" begin="1.6s" keyTimes="0;  0.5; 1"
+                keySplines="0.1 0.1 0.1 0.1; 0.1 0.1 0.1 0.1;" calcMode="spline" repeatCount="indefinite">
+                <mpath xlink:href="#circlepath4" />
+              </animateMotion>
+              <animate attributeName="r" values="16;20;20;16" dur="5s" repeatCount="indefinite" />
+              <animate attributeName="fill" values="red; orange; yellow; green; blue; indigo; violet; red;" begin="0.9s"
+                dur="10s" repeatCount="indefinite" />
+            </circle>
+            <circle class="loadingCircle" r="20">
+              <animateMotion dur="5.6s" begin="2.4s" keyTimes="0;  0.5; 1" keySplines="0.1 0.1 0.1 0.1; 0.1 0.1 0.1 0.1;"
+                calcMode="spline" repeatCount="indefinite">
                 <mpath xlink:href="#circlepath4" />
               </animateMotion>
               <animate attributeName="r" values="16;20;20;16" dur="5s" repeatCount="indefinite" />
@@ -119,32 +118,17 @@
                 dur="10s" repeatCount="indefinite" />
             </circle>
             <circle class="loadingCircle" r="20">
-              <animateMotion dur="5.6s" begin="2.4s"
-              keyTimes="0;  0.5; 1"
-              keySplines="0.1 0 0 0.1; 0.1 0 0 0.1;"
-              calcMode="spline" repeatCount="indefinite">
+              <animateMotion id="circle4motion" dur="5.6s" begin="3.2s" keyTimes="0;  0.5; 1"
+                keySplines="0.1 0.1 0.1 0.1; 0.1 0.1 0.1 0.1;" calcMode="spline" fill="freeze" repeatCount="indefinite">
                 <mpath xlink:href="#circlepath4" />
               </animateMotion>
               <animate attributeName="r" values="16;20;20;16" dur="5s" repeatCount="indefinite" />
-              <animate attributeName="fill" values="red; orange; yellow; green; blue; indigo; violet; red;" begin="0.4s"
+              <animate attributeName="fill" values="red; orange; yellow; green; blue; indigo; violet; red;" begin="0.3s"
                 dur="10s" repeatCount="indefinite" />
             </circle>
             <circle class="loadingCircle" r="20">
-              <animateMotion id="circle4motion" dur="5.6s" begin="3.2s"
-              keyTimes="0;  0.5; 1"
-              keySplines="0.1 0 0 0.1; 0.1 0 0 0.1;"
-              calcMode="spline" repeatCount="indefinite">
-                <mpath xlink:href="#circlepath4" />
-              </animateMotion>
-              <animate attributeName="r" values="16;20;20;16" dur="5s" repeatCount="indefinite" />
-              <animate attributeName="fill" values="red; orange; yellow; green; blue; indigo; violet; red;" begin="0.2s"
-                dur="10s" repeatCount="indefinite" />
-            </circle>
-            <circle class="loadingCircle" r="20">
-              <animateMotion id="circle4motion" dur="5.6s" begin="4.0s"
-              keyTimes="0;  0.5; 0.999"
-              keySplines="0.05 0 0 0.05; 0.05 0 0 0.05;"
-              calcMode="spline" repeatCount="indefinite">
+              <animateMotion id="circle4motion" dur="5.6s" begin="4.0s" keyTimes="0;  0.5; 1"
+                keySplines="0.1 0.1 0.1 0.1; 0.1 0.1 0.1 0.1;" calcMode="spline" fill="freeze" repeatCount="indefinite">
                 <mpath xlink:href="#circlepath4" />
               </animateMotion>
               <animate attributeName="r" values="16;20;20;16" dur="5s" repeatCount="indefinite" />
@@ -152,10 +136,8 @@
                 dur="10s" repeatCount="indefinite" />
             </circle>
             <circle class="loadingCircle" r="20">
-              <animateMotion id="circle4motion" dur="5.6s" begin="4.8s"
-              keyTimes="0;  0.5; 0.99"
-              keySplines="0.01 0 0 0.01; 0.01 0 0 0.01;"
-              calcMode="spline" repeatCount="indefinite">
+              <animateMotion id="circle4motion" dur="5.6s" begin="4.8s" keyTimes="0;  0.5; 1"
+                keySplines="0.1 0.1 0.1 0.1; 0.1 0.1 0.1 0.1;" calcMode="spline" calcMode="spline" fill="freeze" repeatCount="indefinite">
                 <mpath xlink:href="#circlepath4" />
               </animateMotion>
               <animate attributeName="r" values="16;20;20;16" dur="5s" repeatCount="indefinite" />

@@ -20,7 +20,6 @@ svg.shaders {
 }
 
 svg {
-    overflow-clip-margin: 100vw;
     overflow: visible;
 }
 
