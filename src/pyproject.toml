@@ -1,0 +1,26 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "fling-start"
+version = "0.1.1"
+description = "Side Project Management from the command line"
+authors = [
+    "Joshua McKenty <jmckenty@gmail.com>",
+    "Anouk Ruhaak <anoukruhaak@gmail.com>",
+]
+readme = "README.md"
+include = [{ path = "VERSION" }, { path = "README.md" }, 
+    { path = "fling/static" },
+    { path = "fling/templates" },]
+packages = [
+    { include = "fling" },
+]
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+flask = "*"
