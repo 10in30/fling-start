@@ -24,24 +24,23 @@
 
   <div class="stacked">
     <div id="loading">
-      <svg height="100%" width="100%" viewBox="0 0 800 388">
+      <svg height="100%" width="100%" viewBox="-250 -250 250 250">
         <defs>
           <filter id="blur">
             <feDropShadow dx="10" dy="10" stdDeviation="2">
-              <animate attributeName="stdDeviation" values="2 0; 0 2; 2 0; 0 2; 2 0; " dur="10s"
-                repeatCount="indefinite" fill="freeze" />
+              <animate attributeName="stdDeviation" values="2 0; 0 2; 2 0; 0 2; 2 0; " dur="10s" repeatCount="indefinite" fill="freeze" />
               <animate attributeName="dx" values="0;5;0;-5;0" dur="10s" repeatCount="indefinite" fill="freeze" />
               <animate attributeName="dy" values="5;0;-5;0;5" dur="10s" repeatCount="indefinite" fill="freeze" />
             </feDropShadow>
           </filter>
-          <path
+          <!-- <path
             d="M 400.372 49.999 C 323.997 50.539 274.407 85.548 275.005 181.908 C 275.603 278.243 353.793 299.809 402.037 299.991 C 450.181 300.17 524.341 279.245 524.992 183.114 C 525.663 84.284 481.094 49.427 400.372 49.999 Z"
-            id="circlepath3"></path>
+            id="circlepath3"></path> -->
           <path d="M 0 0 A 50 50 0 0 1 -50 50 A 50 50 0 0 1 -100 0 A 50 50 0 0 1 -50 -50 A 50 50 0 0 1 0 0 Z"
             id="circlepath4"></path>
 
           <filter id="loading-shader" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"
-            primitiveUnits="userSpaceOnUse" width="200vw" height="200vh" x="-50vw" y="-50vh">
+            primitiveUnits="userSpaceOnUse" width="300%" height="200%" x="-500" y="-500" > <!-- width="200vw" height="200vh" x="-50vw" y="-50vh" -->
             <feSpecularLighting id="specLighting" result="specOut" specularExponent="500" specularConstant="0.5"
               lighting-color="#bb99bb">
               <fePointLight id="point-light" x="0" y="75" z="1000" />
@@ -59,21 +58,21 @@
             <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />
           </filter>
         </defs>
-        <g filter="url(#loading-shader)" x="0" y="0" width="100%" height="100%">
-          <rect id="stage" x="-400" y="-200" width="200vw" height="200vh" style="fill:#888899">
-            <animate attributeName="fill" values="grey; light grey; light blue; pink; grey" begin="3s" dur="10s"
+        <g id="shadedgroup" width="100%" height="100%">
+          <rect id="stage" width="300%" height="300%" x="-500" y="-500">
+            <animate attributeName="fill" values="grey; light-grey; light-blue; pink; grey" begin="3s" dur="10s"
               repeatCount="indefinite" />
           </rect>
-          <g width="100%" height="100%">
+          <g width="100%" height="100%" transform="translate(-70, -125)">
 
             <!-- <animateMotion dur="40s" repeatCount="indefinite">
               <mpath xlink:href="#circlepath3" />
             </animateMotion> -->
-            <animateTransform attributeName="transform" type="scale" values="0.8 0.8; 1 1; 0.9 0.9; 0.8 0.8;" dur="10s"
-              repeatCount="indefinite" />
-            <animateTransform attributeName="transform" type="translate" values="-50 200; 450 200; 450 200; 950 200;"
+            <!-- <animateTransform attributeName="transform" type="scale" values="0.8 0.8; 1 1; 0.9 0.9; 0.8 0.8;" dur="10s"
+              repeatCount="indefinite" /> -->
+            <!-- <animateTransform attributeName="transform" type="translate" values="-50 50%; 45% 50%; 55% 50%; 120% 50%;"
               dur="10s" keyTimes="0; 0.2; 0.8; 1" keySplines="0.1 0.8 0.2 1; 0.5 0 0.5 1; 0.5 0 0 1" calcMode="spline"
-              repeatCount="indefinite" />
+              repeatCount="indefinite" /> -->
             <!-- <animateTransform
       attributeName="transform"
       type="skewX"
@@ -82,8 +81,7 @@
       dur="15s"
       repeatCount="indefinite" /> -->
             <circle class="loadingCircle" r="20">
-              <animateMotion dur="5.6s" repeatCount="indefinite" begin="0" keyTimes="0;  0.4; 1"
-                keySplines="0.1 0.1 0.1 0.1; 0.1 0.1 0.1 0.1;" calcMode="spline">
+              <animateMotion dur="5.6s" repeatCount="indefinite" begin="0">
                 <mpath xlink:href="#circlepath4" />
               </animateMotion>
               <animate attributeName="fill" values="red; orange; yellow; green; blue; indigo; violet; red;" begin="1.5s"
@@ -91,8 +89,7 @@
               <animate attributeName="r" values="16;20;20;16" dur="5s" repeatCount="indefinite" />
             </circle>
             <circle class="loadingCircle" r="20">
-              <animateMotion dur="5.6s" begin="0.8s" repeatCount="indefinite" keyTimes="0;  0.5; 1"
-                keySplines="0.1 0.1 0.1 0.1; 0.1 0.1 0.1 0.1;" calcMode="spline">
+              <animateMotion dur="5.6s" begin="0.8s" repeatCount="indefinite">
                 <mpath xlink:href="#circlepath4" />
               </animateMotion>
               <animate attributeName="r" values="16;20;20;16" dur="5s" repeatCount="indefinite" />
@@ -100,8 +97,7 @@
                 dur="10s" repeatCount="indefinite" />
             </circle>
             <circle class="loadingCircle" r="20">
-              <animateMotion dur="5.6s" begin="1.6s" keyTimes="0;  0.5; 1"
-                keySplines="0.1 0.1 0.1 0.1; 0.1 0.1 0.1 0.1;" calcMode="spline" repeatCount="indefinite">
+              <animateMotion dur="5.6s" begin="1.6s" repeatCount="indefinite">
                 <mpath xlink:href="#circlepath4" />
               </animateMotion>
               <animate attributeName="r" values="16;20;20;16" dur="5s" repeatCount="indefinite" />
@@ -109,8 +105,7 @@
                 dur="10s" repeatCount="indefinite" />
             </circle>
             <circle class="loadingCircle" r="20">
-              <animateMotion dur="5.6s" begin="2.4s" keyTimes="0;  0.5; 1" keySplines="0.1 0.1 0.1 0.1; 0.1 0.1 0.1 0.1;"
-                calcMode="spline" repeatCount="indefinite">
+              <animateMotion dur="5.6s" begin="2.4s" repeatCount="indefinite">
                 <mpath xlink:href="#circlepath4" />
               </animateMotion>
               <animate attributeName="r" values="16;20;20;16" dur="5s" repeatCount="indefinite" />
@@ -118,8 +113,7 @@
                 dur="10s" repeatCount="indefinite" />
             </circle>
             <circle class="loadingCircle" r="20">
-              <animateMotion id="circle4motion" dur="5.6s" begin="3.2s" keyTimes="0;  0.5; 1"
-                keySplines="0.1 0.1 0.1 0.1; 0.1 0.1 0.1 0.1;" calcMode="spline" fill="freeze" repeatCount="indefinite">
+              <animateMotion id="circle4motion" dur="5.6s" begin="3.2s" fill="freeze" repeatCount="indefinite">
                 <mpath xlink:href="#circlepath4" />
               </animateMotion>
               <animate attributeName="r" values="16;20;20;16" dur="5s" repeatCount="indefinite" />
@@ -127,8 +121,7 @@
                 dur="10s" repeatCount="indefinite" />
             </circle>
             <circle class="loadingCircle" r="20">
-              <animateMotion id="circle4motion" dur="5.6s" begin="4.0s" keyTimes="0;  0.5; 1"
-                keySplines="0.1 0.1 0.1 0.1; 0.1 0.1 0.1 0.1;" calcMode="spline" fill="freeze" repeatCount="indefinite">
+              <animateMotion id="circle4motion" dur="5.6s" begin="4.0s" fill="freeze" repeatCount="indefinite">
                 <mpath xlink:href="#circlepath4" />
               </animateMotion>
               <animate attributeName="r" values="16;20;20;16" dur="5s" repeatCount="indefinite" />
@@ -136,8 +129,7 @@
                 dur="10s" repeatCount="indefinite" />
             </circle>
             <circle class="loadingCircle" r="20">
-              <animateMotion id="circle4motion" dur="5.6s" begin="4.8s" keyTimes="0;  0.5; 1"
-                keySplines="0.1 0.1 0.1 0.1; 0.1 0.1 0.1 0.1;" calcMode="spline" calcMode="spline" fill="freeze" repeatCount="indefinite">
+              <animateMotion id="circle4motion" dur="5.6s" begin="4.8s" fill="freeze" repeatCount="indefinite">
                 <mpath xlink:href="#circlepath4" />
               </animateMotion>
               <animate attributeName="r" values="16;20;20;16" dur="5s" repeatCount="indefinite" />
