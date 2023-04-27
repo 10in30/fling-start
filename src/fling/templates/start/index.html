@@ -129,13 +129,18 @@
   {% block scripts %}
 {{ super() }}
   <script async defer>
+  window.addEventListener("beforeunload", () => {
+     document.body.classList.remove("loaded");
+  });
+  window.addEventListener("pageshow", () => {
     fetch('/main', {redirect: 'error'}).then((response) => {
         response.text().then((html) => {
           document.getElementById('content').innerHTML =  html;
           document.body.classList.add("loaded");
         });
-  }).catch((response) => {
-      window.location.href = "/main";
+    }).catch((response) => {
+        window.location.href = "/main";
+    });
   });
   </script>
 {% endblock %}
