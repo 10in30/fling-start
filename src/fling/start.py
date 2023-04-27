@@ -1,6 +1,4 @@
 from collections import UserDict
-import os
-import signal
 from typing import Any, List
 from flask_bootstrap import Bootstrap5
 from flask import (
@@ -16,8 +14,10 @@ from flask_babel import Babel
 from flask_admin import Admin
 import pip
 import importlib
-from os import environ as osenv
 from dotenv import load_dotenv
+load_dotenv()
+
+from os import environ as osenv
 
 
 app = Flask("starter")
@@ -69,7 +69,6 @@ class Environ(UserDict):
 
     def __init__(self, *args, **kwargs):
         kwargs.pop("app")
-        load_dotenv()
         keys = {}
         keys.update(**kwargs)
         super().__init__(*args, **keys)
