@@ -1,0 +1,14 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+  <h2>Environment Variables and Keys Management</h2>
+{% if missing_keys %}
+<h4>Looks like you're missing some important keys...</h4>
+<form method="post" action="/update_keys">
+{% for key in missing_keys %}
+    {{key}} : <input type="text" name="{{ key }}"/><br/>
+{% endfor %}
+<input type="submit" value="Save Keys and Tokens" />
+</form>
+{% endif %}
+{% endblock %}

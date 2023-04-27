@@ -1,5 +1,8 @@
 from collections import UserDict
+import os
+import signal
 from typing import Any, List
+from flask_bootstrap import Bootstrap5
 from flask import (
     Flask,
     Blueprint,
@@ -8,10 +11,18 @@ from flask import (
     redirect,
     request,
 )
+from flask_caching import Cache
+from flask_babel import Babel
+from flask_admin import Admin
 import pip
 import importlib
 from os import environ as osenv
 from dotenv import load_dotenv
+
+
+app = Flask("starter")
+cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
+cache.init_app(app)
 
 
 def install(package):
@@ -50,6 +61,7 @@ def x3d():
 
 def admin_bounce():
     return redirect("/admin")
+    # return """<script>window.location.href='/admin';</script>"""
 
 
 class Environ(UserDict):
@@ -59,7 +71,6 @@ class Environ(UserDict):
         kwargs.pop("app")
         load_dotenv()
         keys = {}
-        keys.update(**osenv)
         keys.update(**kwargs)
         super().__init__(*args, **keys)
 
@@ -67,7 +78,9 @@ class Environ(UserDict):
         """Make sure all the environment keys are available.
         If not, dump to the admin interface to capture them."""
         for key in list_of_keys:
-            if not osenv.get(key):
+            if osenv.get(key):
+                self.__setitem__(key, osenv[key])
+            else:
                 # TODO(JMC): If this is running headless, aka PROD, then fail?
                 print(f"Missing a key! {key}")
                 self.MISSING_KEYS.append(key)
@@ -93,41 +106,57 @@ class Environ(UserDict):
         return storeditem
 
 
-@start.route("/admin", methods=["GET", "POST"])
-def admin_home():
+pending_restart = False
+
+
+@start.route("/update_keys", methods=["POST"])
+def admin_keys():
+    global pending_restart
     if request.form:
         for key in request.form:
             environ[key] = request.form[key]
         environ.save_to_env()
-        return "OK! Now restart"
-    return render_template_string(
-        """
-        {% extends "base.html" %}
-        {% block content %}
-            <h1> Admin </h1>
-            {% if missing_keys %}
-            <h4>Looks like you're missing some important keys...</h4>
-            <form method="post" action="/admin">
-            {% for key in missing_keys %}
-                {{key}} : <input type="text" name="{{ key }}"/><br/>
-            {% endfor %}
-            <input type="submit" name="Save Keys and Tokens" />
-            </form>
-            {% endif %}
-        {% endblock %} """,
-        missing_keys=environ.MISSING_KEYS,
-    )
+        pending_restart = True
+        return """<meta http-equiv="refresh" content="5;URL='/admin'"/>OK! Now to restart..."""
 
 
-app = Flask("starter")
+babel = Babel(app)
+app.config["FLASK_ADMIN_SWATCH"] = "darkly"
+
 app.register_blueprint(start)
-
+admin = Admin(app, name="Admin", template_mode="bootstrap3")
+bootstrap = Bootstrap5(app)
 environ = Environ(app=app)
 
 
-def start_app(main_func):
-    app.add_url_rule("/main", view_func=main_func)
-    app.run()
+@app.after_request
+def response_processor(response):
+    # Prepare all the local variables you need since the request context
+    # will be gone in the callback function
+
+    @response.call_on_close
+    def process_after_request():
+        global pending_restart
+        if pending_restart:
+            print("Gonna reboot here...")
+            import pathlib
+
+            pathlib.Path("reboot.py").touch(mode=0o666, exist_ok=True)
+            # signal.raise_signal(signal.SIGABRT)
+
+    return response
+
+
+def start_app(main_func, domain_name=None):
+    if not environ.MISSING_KEYS:
+        app.add_url_rule("/main", view_func=main_func)
+
+    @app.context_processor
+    def inject_globals():
+        return dict(domain_name=domain_name, missing_keys=environ.MISSING_KEYS)
+
+    if __name__ == "__main__":
+        app.run()
 
 
 EXPORTS = [app, render_template_string, install_everything, environ, start_app]
