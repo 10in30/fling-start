@@ -14,7 +14,7 @@ from flask_babel import Babel
 from flask_admin import Admin
 import pip
 import importlib
-from dotenv import load_dotenv
+from dotenv_vault import load_dotenv
 load_dotenv()
 
 from os import environ as osenv
