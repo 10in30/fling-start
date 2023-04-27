@@ -2,7 +2,29 @@
     /* background-color: lightslategrey; */
     height: 100vh;
     width: 100vw;
+    position: absolute;
+    top: 0;
     /* filter: url(#loading-shader); */
+}
+
+#stacked {
+    position: relative;
+}
+
+#content {
+    display: none;
+}
+
+body.loaded #content {
+    position: relative;
+    display: block;
+    z-index: 100;
+}
+
+body.loaded #shadedgroup {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 2s, opacity 2s linear;
 }
 
 @media only screen and (min-width: 900px) {
@@ -14,12 +36,12 @@
 .loadingCircle {
     filter: url(#blur);
 }
-
+    /* 
 .stacked * {
     position: absolute;
-    /* height: 100vh;
-    width: 100vw; */
-}
+    height: 100vh;
+    width: 100vw;
+} */
 
 svg.shaders {
     position: absolute;
