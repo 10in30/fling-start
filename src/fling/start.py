@@ -1,5 +1,6 @@
 from collections import UserDict
 from typing import Any, List
+from flask_rich import RichApplication
 from flask_bootstrap import Bootstrap5
 from flask import (
     Flask,
@@ -19,10 +20,11 @@ load_dotenv()
 
 from os import environ as osenv
 
-
+rich = RichApplication()
 app = Flask("starter")
 cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
 cache.init_app(app)
+rich.init_app(app)
 
 
 def install(package):
