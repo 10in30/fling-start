@@ -9,6 +9,7 @@ from flask import (
     render_template_string,
     redirect,
     request,
+    send_from_directory,
 )
 from flask_caching import Cache
 from flask_babel import Babel
@@ -16,13 +17,14 @@ from flask_admin import Admin
 import pip
 import importlib
 from dotenv_vault import load_dotenv
+
 load_dotenv()
 
 from os import environ as osenv
 
 rich = RichApplication()
 app = Flask("starter")
-cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
+cache = Cache(config={"CACHE_TYPE": "SimpleCache"})
 cache.init_app(app)
 rich.init_app(app)
 
@@ -124,7 +126,17 @@ def admin_keys():
 babel = Babel(app)
 app.config["FLASK_ADMIN_SWATCH"] = "darkly"
 
+
 app.register_blueprint(start)
+
+
+@app.route("/.well-known/<path:filename>")
+def wellKnownRoute(filename):
+    return send_from_directory(
+        app.root_path + "/well-known/", filename, conditional=True
+    )
+
+
 admin = Admin(app, name="Admin", template_mode="bootstrap3")
 bootstrap = Bootstrap5(app)
 environ = Environ(app=app)
@@ -132,8 +144,6 @@ environ = Environ(app=app)
 
 @app.after_request
 def response_processor(response):
-    # Prepare all the local variables you need since the request context
-    # will be gone in the callback function
 
     @response.call_on_close
     def process_after_request():
@@ -148,9 +158,16 @@ def response_processor(response):
     return response
 
 
+def app_maker():
+    return render_template_string("Put your app name here and pick some options.")
+
+
 def start_app(main_func, domain_name=None):
     if not environ.MISSING_KEYS:
-        app.add_url_rule("/main", view_func=main_func)
+        if main_func:
+            app.add_url_rule("/main", view_func=main_func)
+        else:
+            app.add_url_rule("/main", view_func=app_maker)
 
     @app.context_processor
     def inject_globals():

@@ -16,9 +16,12 @@
           <!-- <path
             d="M 400.372 49.999 C 323.997 50.539 274.407 85.548 275.005 181.908 C 275.603 278.243 353.793 299.809 402.037 299.991 C 450.181 300.17 524.341 279.245 524.992 183.114 C 525.663 84.284 481.094 49.427 400.372 49.999 Z"
             id="circlepath3"></path> -->
-          <path d="M 0 0 A 50 50 0 0 1 -50 50 A 50 50 0 0 1 -100 0 A 50 50 0 0 1 -50 -50 A 50 50 0 0 1 0 0 Z"
-            id="circlepath4"></path>
 
+          <path d="M 0 0 A 50 50 0 0 1 -50 50 A 50 50 0 0 1 -100 0 A 50 50 0 0 1 -50 -50 A 50 50 0 0 1 0 0 Z"
+            id="circlepath4" ></path>
+            
+            <path d="M -20.944 33.614 C -42.827 51.272 -70.779 43.941 -88.201 26.501 C -105.623 9.061 -100.628 -17.694 -84.052 -33.939 C -67.476 -50.184 -33.516 -53.682 -14.389 -33.599 C 4.738 -13.516 0.939 15.956 -20.944 33.614 Z"
+            id="circlepath3"></path>
           <filter id="loading-shader" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"
             primitiveUnits="userSpaceOnUse" width="300%" height="200%" x="-500" y="-500">
             <!-- width="200vw" height="200vh" x="-50vw" y="-50vh" -->
@@ -61,14 +64,17 @@
       values="0; 5; 10; 15; 15; 10; 5; 0; -5; -10; -15; -15; -10; -5; 0;"
       dur="15s"
       repeatCount="indefinite" /> -->
+
+
             <circle class="loadingCircle" r="20">
-              <animateMotion dur="5.6s" repeatCount="indefinite" begin="0">
-                <mpath xlink:href="#circlepath4" />
+              <animateMotion dur="5.6s" repeatCount="indefinite" begin="0s">
+                <mpath xlink:href="#circlepath4"/>
               </animateMotion>
               <animate attributeName="fill" values="red; orange; yellow; green; blue; indigo; violet; red;" begin="1.5s"
                 dur="10s" repeatCount="indefinite" />
               <animate attributeName="r" values="16;20;20;16" dur="5s" repeatCount="indefinite" />
             </circle>
+
             <circle class="loadingCircle" r="20">
               <animateMotion dur="5.6s" begin="0.8s" repeatCount="indefinite">
                 <mpath xlink:href="#circlepath4" />
@@ -77,6 +83,7 @@
               <animate attributeName="fill" values="red; orange; yellow; green; blue; indigo; violet; red;" begin="1.2s"
                 dur="10s" repeatCount="indefinite" />
             </circle>
+
             <circle class="loadingCircle" r="20">
               <animateMotion dur="5.6s" begin="1.6s" repeatCount="indefinite">
                 <mpath xlink:href="#circlepath4" />
@@ -85,6 +92,7 @@
               <animate attributeName="fill" values="red; orange; yellow; green; blue; indigo; violet; red;" begin="0.9s"
                 dur="10s" repeatCount="indefinite" />
             </circle>
+
             <circle class="loadingCircle" r="20">
               <animateMotion dur="5.6s" begin="2.4s" repeatCount="indefinite">
                 <mpath xlink:href="#circlepath4" />
@@ -93,6 +101,7 @@
               <animate attributeName="fill" values="red; orange; yellow; green; blue; indigo; violet; red;" begin="0.6s"
                 dur="10s" repeatCount="indefinite" />
             </circle>
+
             <circle class="loadingCircle" r="20">
               <animateMotion id="circle4motion" dur="5.6s" begin="3.2s" fill="freeze" repeatCount="indefinite">
                 <mpath xlink:href="#circlepath4" />
@@ -101,6 +110,7 @@
               <animate attributeName="fill" values="red; orange; yellow; green; blue; indigo; violet; red;" begin="0.3s"
                 dur="10s" repeatCount="indefinite" />
             </circle>
+
             <circle class="loadingCircle" r="20">
               <animateMotion id="circle4motion" dur="5.6s" begin="4.0s" fill="freeze" repeatCount="indefinite">
                 <mpath xlink:href="#circlepath4" />
@@ -109,6 +119,7 @@
               <animate attributeName="fill" values="red; orange; yellow; green; blue; indigo; violet; red;" begin="0s"
                 dur="10s" repeatCount="indefinite" />
             </circle>
+
             <circle class="loadingCircle" r="20">
               <animateMotion id="circle4motion" dur="5.6s" begin="4.8s" fill="freeze" repeatCount="indefinite">
                 <mpath xlink:href="#circlepath4" />

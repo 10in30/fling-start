@@ -2,3 +2,5 @@ corp/data
 dist
 .pyc
 __pycache__
+.env
+.DS_Store
