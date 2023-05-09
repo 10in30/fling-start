@@ -12,4 +12,4 @@ jobs:
         uses: JRubics/poetry-publish@v1.16
         with:
           pypi_token: ${{ secrets.PYPI_TOKEN }}
-          package_directory: "subdirectory"
+          package_directory: "src"
