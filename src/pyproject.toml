@@ -18,6 +18,11 @@ packages = [
     { include = "fling" },
 ]
 
+[tool.poetry.urls]
+homepage = "https://fling.wtf"
+documentation = "https://readthedocs.org/fling-start"
+repository = "https://github.com/10in30/fling-start.git"
+
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
 
