@@ -9,16 +9,18 @@
             "type": "python",
             "request": "launch",
             "module": "flask",
-            "cwd": "${workspaceFolder}/src",
+            "cwd": "${workspaceFolder}/src/my_app",
             "env": {
-                "FLASK_APP": "my_app/app.py",
+                "FLASK_APP": "demo_app.py",
                 "FLASK_DEBUG": "1"
             },
             "args": [
                 "run",
+                "--host", "unix:///tmp/demo.soc",
             ],
             "jinja": true,
-            "justMyCode": true
+            "justMyCode": true,
+            "console": "internalConsole"
         }
     ]
 }
