@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "fling-start"
-version = "0.1.13"
+version = "0.1.14"
 description = "Side Project Management from the command line"
 authors = [
     "Joshua McKenty <jmckenty@gmail.com>",
@@ -34,5 +34,5 @@ flask-admin = "^1.6.1"
 flask-babel = "^3.1.0"
 flask-caching = "^2.0.2"
 python-dotenv = "*"
-python-dotenv-vault = "^0.4.1"
+# python-dotenv-vault = "^0.4.1"
 flask-rich = "^0.3.0"

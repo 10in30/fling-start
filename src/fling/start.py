@@ -18,9 +18,9 @@ import pip
 import importlib
 import sys
 from werkzeug.debug import DebuggedApplication
-from dotenv_vault import load_dotenv
+from dotenv import load_dotenv
 
-__version__ = "0.1.13"
+__version__ = "0.1.14"
 
 
 load_dotenv()
