@@ -1,0 +1,116 @@
+{
+  "fmt": "dopamine-effect",
+  "v": "1.0.0",
+  "id": "dopamine.acknowledge.ripple",
+  "meta": {
+    "name": "Ripple",
+    "description": "A droplet in a still pool: concentric waves expand from the action point and refract bright caustic light that dances across the UI, then the surface settles.",
+    "tags": ["acknowledge", "tactile", "water"]
+  },
+  "controls": {
+    "mood": {
+      "type": "enum",
+      "default": "celebratory",
+      "options": ["serene", "celebratory", "electric"],
+      "ui": "segmented"
+    },
+    "intensity": { "type": "scalar", "default": 0.7, "min": 0, "max": 1, "step": 0.01, "ui": "slider" },
+    "whimsy": { "type": "scalar", "default": 0.5, "min": 0, "max": 1, "step": 0.01, "ui": "slider" },
+    "seed": { "type": "int", "default": null, "nullable": true },
+    "origin": { "type": "point", "default": "center" },
+    "target": { "type": "selector", "default": "document.body" }
+  },
+  "baselines": {
+    "serene": {
+      "durationMs": 2400,
+      "lightness": 0.86,
+      "chroma": 0.08,
+      "hueCenter": 220,
+      "hueRange": 110,
+      "amplitude": 0.42,
+      "rings": 3,
+      "wavelength": 0.16,
+      "speed": 0.34,
+      "caustic": 0.55
+    },
+    "celebratory": {
+      "durationMs": 1800,
+      "lightness": 0.82,
+      "chroma": 0.15,
+      "hueCenter": 190,
+      "hueRange": 280,
+      "amplitude": 0.5,
+      "rings": 4,
+      "wavelength": 0.13,
+      "speed": 0.42,
+      "caustic": 0.75
+    },
+    "electric": {
+      "durationMs": 1300,
+      "lightness": 0.8,
+      "chroma": 0.22,
+      "hueCenter": 175,
+      "hueRange": 160,
+      "amplitude": 0.58,
+      "rings": 5,
+      "wavelength": 0.11,
+      "speed": 0.52,
+      "caustic": 0.95
+    }
+  },
+  "palette": {
+    "model": "oklch",
+    "space": "linear-srgb",
+    "generator": "golden-angle",
+    "goldenAngleDeg": 137.50776405003785,
+    "stops": 3,
+    "hueSpread": 0.55,
+    "lightness": { "baseline": "lightness", "perStop": [0, 0.06, -0.05] },
+    "chroma": {
+      "from": { "mul": [{ "baseline": "chroma" }, { "lerp": ["intensity", 0.7, 1.5] }] },
+      "perStop": [0, 0.02, -0.01]
+    },
+    "seed": { "deterministic": true, "source": "controls.seed", "prng": "mulberry32" },
+    "perMood": {
+      "serene": { "hueCenter": 220, "hueRange": 110, "lightness": 0.86, "chroma": 0.08 },
+      "celebratory": { "hueCenter": 190, "hueRange": 280, "lightness": 0.82, "chroma": 0.15 },
+      "electric": { "hueCenter": 175, "hueRange": 160, "lightness": 0.8, "chroma": 0.22 }
+    }
+  },
+  "tempo": {
+    "durationMs": {
+      "from": { "round": { "mul": [{ "baseline": "durationMs" }, { "lerp": ["intensity", 1.1, 0.9] }] } }
+    }
+  },
+  "render": {
+    "params": {
+      "exposure": { "type": "float", "from": { "lerp": ["intensity", 0.85, 1.5] } },
+      "amplitude": {
+        "type": "float",
+        "from": { "mul": [{ "baseline": "amplitude" }, { "lerp": ["intensity", 0.7, 1.35] }] }
+      },
+      "rings": {
+        "type": "int",
+        "from": { "round": { "add": [{ "baseline": "rings" }, { "lerp": ["intensity", 0, 2] }] } },
+        "clampMax": "MAX_RINGS",
+        "clampMin": "MIN_RINGS"
+      },
+      "wavelength": { "type": "float", "from": { "baseline": "wavelength" } },
+      "speed": { "type": "float", "from": { "mul": [{ "baseline": "speed" }, { "lerp": ["intensity", 0.92, 1.12] }] } },
+      "caustic": {
+        "type": "float",
+        "from": { "mul": [{ "baseline": "caustic" }, { "lerp": ["intensity", 0.6, 1.3] }] }
+      },
+      "overshoot": { "type": "float", "from": { "lerp": ["intensity", 0.7, 1.4] } },
+      "style": { "type": "float", "from": { "control": "whimsy" } }
+    },
+    "backends": {
+      "webgl2": {
+        "stage": "fullscreen-triangle",
+        "blend": "screen",
+        "shader": { "program": "ripple" }
+      }
+    },
+    "fallbackOrder": ["webgl2"]
+  }
+}

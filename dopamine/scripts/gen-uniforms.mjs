@@ -106,6 +106,29 @@ const EFFECTS = {
     // emitted into the web name-list only so list (c) stays a complete superset.
     samplers: ["uCheckTex", "uSdfTex"],
   },
+  ripple: {
+    // Where the `.dope` lives + where to write the generated files.
+    dope: "swift/Sources/DopamineEffectRipple/Resources/ripple.dope.json",
+    swiftOut: "swift/Sources/DopamineEffectRipple/RippleUniforms.swift",
+    mslOut: "swift/Sources/DopamineEffectRipple/Shaders/RippleUniforms.metal",
+    // Web name-list kept OUT of the SwiftPM Sources tree (so it isn't an
+    // unhandled resource); it documents the GLSL `u<Name>` superset for the TS.
+    webOut: "swift/Generated/ripple.uniforms.json",
+    // `render.params` that are NOT shader uniforms (web `bindings: null` /
+    // standard / tempo). `style` is the standard uStyle; `overshoot` feeds the
+    // envelope (web `bindings: { overshoot: null }`); `durationMs` is tempo.
+    excludeParams: ["style", "overshoot", "durationMs"],
+    // A resolved param the shader reads, keyed off the seed (web: scatterKey,
+    // bound via `bindings: { rippleSeed: "uSeed" }`). Appended after the .dope
+    // render.params, before any frame/plumbing extras.
+    scatterKey: "rippleSeed",
+    // Ripple has no per-frame extras: its global brightness is the generic
+    // held-breath envelope (fed to the shadow geometry), and it draws no
+    // checkmark / texture-bound layer. So the struct tail is empty.
+    extras: [],
+    // No sampler uniforms (Ripple is a pure analytic shader — no textures).
+    samplers: [],
+  },
 };
 
 // ---------------------------------------------------------------------------
