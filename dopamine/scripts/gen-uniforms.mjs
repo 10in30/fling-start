@@ -106,6 +106,30 @@ const EFFECTS = {
     // emitted into the web name-list only so list (c) stays a complete superset.
     samplers: ["uCheckTex", "uSdfTex"],
   },
+  confetti: {
+    // Where the `.dope` lives + where to write the generated files.
+    dope: "swift/Sources/DopamineEffectConfetti/Resources/confetti.dope.json",
+    swiftOut: "swift/Sources/DopamineEffectConfetti/ConfettiUniforms.swift",
+    mslOut: "swift/Sources/DopamineEffectConfetti/Shaders/ConfettiUniforms.metal",
+    // Web name-list kept OUT of the SwiftPM Sources tree (so it isn't an
+    // unhandled resource); it documents the GLSL `u<Name>` superset for the TS.
+    webOut: "swift/Generated/confetti.uniforms.json",
+    // `render.params` that are NOT shader uniforms (web `bindings: null` /
+    // standard / tempo). `style` is the standard uStyle; `overshoot` feeds the
+    // launch-then-fall envelope; `durationMs` is tempo. Matches index.ts
+    // `bindings: { overshoot: null }` + the uniforms list omitting them.
+    excludeParams: ["style", "overshoot", "durationMs"],
+    // A resolved param the shader reads, keyed off the seed (web: scatterKey,
+    // bound via `bindings: { pieceSeed: "uPieceSeed" }`). Appended after the
+    // .dope render.params, before any frame/plumbing extras.
+    scatterKey: "pieceSeed",
+    // Confetti has no per-frame/host extras (no glyph/SDF texture plumbing — it
+    // is a pure particle field; the only time-varying value is `amp`, which is a
+    // standard uniform filled from frame()'s return).
+    extras: [],
+    // No texture samplers (no glyph/SDF).
+    samplers: [],
+  },
 };
 
 // ---------------------------------------------------------------------------

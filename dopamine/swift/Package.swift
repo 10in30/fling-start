@@ -28,6 +28,7 @@ let package = Package(
     products: [
         .library(name: "DopamineCore", targets: ["DopamineCore"]),
         .library(name: "DopamineEffectSolarbloom", targets: ["DopamineEffectSolarbloom"]),
+        .library(name: "DopamineEffectConfetti", targets: ["DopamineEffectConfetti"]),
     ],
     targets: [
         .target(
@@ -46,6 +47,17 @@ let package = Package(
                 // the .metal file is just an unbuilt resource; on macOS/iOS it is
                 // compiled into a `default.metallib` by the Swift build.
                 .copy("Resources/solarbloom.dope.json"),
+                .process("Shaders"),
+            ]
+        ),
+        .target(
+            name: "DopamineEffectConfetti",
+            dependencies: ["DopamineCore"],
+            resources: [
+                // The EXACT web `.dope` (same bytes) + the MSL shader. On Linux
+                // the .metal file is just an unbuilt resource; on macOS/iOS it is
+                // compiled into a `default.metallib` by the Swift build.
+                .copy("Resources/confetti.dope.json"),
                 .process("Shaders"),
             ]
         ),
