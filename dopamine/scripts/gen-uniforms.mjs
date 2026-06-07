@@ -106,6 +106,39 @@ const EFFECTS = {
     // emitted into the web name-list only so list (c) stays a complete superset.
     samplers: ["uCheckTex", "uSdfTex"],
   },
+  comic: {
+    // Where the `.dope` lives + where to write the generated files.
+    dope: "swift/Sources/DopamineEffectComic/Resources/comic.dope.json",
+    swiftOut: "swift/Sources/DopamineEffectComic/ComicUniforms.swift",
+    mslOut: "swift/Sources/DopamineEffectComic/Shaders/ComicUniforms.metal",
+    // Web name-list kept OUT of the SwiftPM Sources tree (so it isn't an
+    // unhandled resource); it documents the GLSL `u<Name>` superset for the TS.
+    webOut: "swift/Generated/comic.uniforms.json",
+    // `render.params` that are NOT shader uniforms (web `bindings: null` /
+    // standard / tempo / draw-only). `style` is the standard uStyle; `overshoot`
+    // feeds the impact slam; `scale`/`burstPoints`/`inkWeight` are draw-only panel
+    // geometry (Canvas2D); `dotSize` is dpr-scaled host-side into uDotSize (not
+    // auto-bound). All match index.ts `bindings: { …: null }`. Excluded here.
+    excludeParams: ["style", "overshoot", "scale", "burstPoints", "inkWeight", "dotSize"],
+    // A resolved param the shader reads, keyed off the seed (web: scatterKey,
+    // bound via `bindings: { comicSeed: "uSeed" }`). Appended after the
+    // .dope render.params, before the frame/plumbing extras.
+    scatterKey: "comicSeed",
+    // Per-frame + host-plumbing fields (filled by the config `frame()` hook and
+    // the Metal host `passUniforms`, not the loader). Order is the struct tail.
+    // `presence`/`flash` come from frame(); `dotSize`/`inkBoost` are the
+    // dpr/style-scaled host extras (web passUniforms).
+    extras: [
+      { name: "presence", type: "float", web: "uPresence", note: "impactPresence(life)" },
+      { name: "flash", type: "float", web: "uFlash", note: "0..1 impact flash (fast spike, decays)" },
+      { name: "dotSize", type: "float", web: "uDotSize", note: "Ben-Day cell size (device px = dotSize*dpr)" },
+      { name: "inkBoost", type: "float", web: "uInkBoost", note: "ink darkness/spread (1 + style*0.4)" },
+    ],
+    // Sampler uniforms the shader declares (texture-bound, not in the struct);
+    // emitted into the web name-list only so list (c) stays a complete superset.
+    // The Canvas2D panel (word/burst/ink) texture is uploaded host-side.
+    samplers: ["uPanel"],
+  },
 };
 
 // ---------------------------------------------------------------------------
