@@ -106,6 +106,33 @@ const EFFECTS = {
     // emitted into the web name-list only so list (c) stays a complete superset.
     samplers: ["uCheckTex", "uSdfTex"],
   },
+  inkstroke: {
+    // Where the `.dope` lives + where to write the generated files.
+    dope: "swift/Sources/DopamineEffectInkstroke/Resources/inkstroke.dope.json",
+    swiftOut: "swift/Sources/DopamineEffectInkstroke/InkstrokeUniforms.swift",
+    mslOut: "swift/Sources/DopamineEffectInkstroke/Shaders/InkstrokeUniforms.metal",
+    // Web name-list kept OUT of the SwiftPM Sources tree (so it isn't an
+    // unhandled resource); it documents the GLSL `u<Name>` superset for the TS.
+    webOut: "swift/Generated/inkstroke.uniforms.json",
+    // `render.params` that are NOT shader uniforms (web `bindings: null` /
+    // standard / tempo). `style` is the standard uStyle; `overshoot` feeds the
+    // envelope (web `bindings: { overshoot: null }`); `durationMs` is tempo.
+    excludeParams: ["style", "overshoot", "durationMs"],
+    // A resolved param the shader reads, keyed off the seed (web: scatterKey,
+    // bound via `bindings: { inkSeed: "uSeed" }` — the field is `inkSeed` but the
+    // GLSL name is `uSeed`). Appended after the .dope render.params, before the
+    // frame/plumbing extras.
+    scatterKey: "inkSeed",
+    scatterWeb: "uSeed",
+    // Per-frame fields (filled by the config `frame()` hook, not the loader).
+    // Inkstroke is fully analytic — no baked-SDF / glyph texture — so the only
+    // extra is the pen draw progress (web `frame()` returns `uDraw`).
+    extras: [
+      { name: "draw", type: "float", web: "uDraw", note: "strokeProgress(animMs) — pen draw 0..1" },
+    ],
+    // No sampler uniforms: the stroke is rendered analytically (no textures).
+    samplers: [],
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -139,8 +166,11 @@ function buildFields(dope, m) {
   }
 
   // (3) the scatter key (resolved, seed-keyed; the shader reads it by name).
+  // The struct field is `scatterKey`; the GLSL uniform name defaults to
+  // `u<ScatterKey>` but can be overridden by `scatterWeb` (e.g. inkstroke's
+  // `inkSeed` field binds to the GLSL `uSeed`).
   if (m.scatterKey) {
-    fields.push({ name: m.scatterKey, type: "float", web: cap(m.scatterKey), kind: "scatter" });
+    fields.push({ name: m.scatterKey, type: "float", web: m.scatterWeb ?? cap(m.scatterKey), kind: "scatter" });
   }
 
   // (4) per-frame + plumbing extras (filled by frame()/host, not the loader).
