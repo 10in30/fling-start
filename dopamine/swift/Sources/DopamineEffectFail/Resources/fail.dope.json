@@ -1,0 +1,264 @@
+{
+  "fmt": "dopamine-effect",
+  "v": "1.0.0",
+  "id": "dopamine.error.fail",
+  "meta": {
+    "name": "Fail Stamp",
+    "description": "A failure/denied moment — the emotional opposite of the success effects. A red/amber cross is stamped in over a recoiling error flare with a sharp hit + shake, then desaturates and collapses. Short and punchy.",
+    "tags": [
+      "error",
+      "fail",
+      "denied",
+      "negative"
+    ]
+  },
+  "controls": {
+    "mood": {
+      "type": "enum",
+      "label": "Mood",
+      "default": "error",
+      "options": [
+        "try-again",
+        "error",
+        "denied"
+      ],
+      "ui": "segmented"
+    },
+    "intensity": {
+      "type": "scalar",
+      "label": "Severity",
+      "default": 0.7,
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "ui": "slider",
+      "help": "How hard the failure lands: flare heat/size, shake amount, recoil."
+    },
+    "whimsy": {
+      "type": "scalar",
+      "label": "Whimsy",
+      "default": 0.5,
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "ui": "slider",
+      "help": "Photoreal flare (0) to desaturated RGB-split glitch collapse (1)."
+    },
+    "seed": {
+      "type": "int",
+      "label": "Seed",
+      "default": null,
+      "nullable": true,
+      "help": "Null = unique error palette per fire; pin to reproduce."
+    },
+    "origin": {
+      "type": "point",
+      "label": "Origin",
+      "default": "center"
+    },
+    "target": {
+      "type": "selector",
+      "label": "Target",
+      "default": "document.body"
+    }
+  },
+  "baselines": {
+    "try-again": {
+      "durationMs": 900,
+      "lightness": 0.78,
+      "chroma": 0.13,
+      "hueCenter": 70,
+      "hueRange": 40,
+      "shakeAmount": 0.5
+    },
+    "error": {
+      "durationMs": 760,
+      "lightness": 0.72,
+      "chroma": 0.17,
+      "hueCenter": 40,
+      "hueRange": 36,
+      "shakeAmount": 0.85
+    },
+    "denied": {
+      "durationMs": 640,
+      "lightness": 0.66,
+      "chroma": 0.21,
+      "hueCenter": 22,
+      "hueRange": 30,
+      "shakeAmount": 1.25
+    }
+  },
+  "palette": {
+    "model": "oklch",
+    "space": "linear-srgb",
+    "generator": "golden-angle",
+    "goldenAngleDeg": 137.50776405003785,
+    "stops": 3,
+    "hueSpread": 0.18,
+    "lightness": {
+      "baseline": "lightness",
+      "perStop": [
+        0,
+        0.06,
+        -0.05
+      ]
+    },
+    "chroma": {
+      "from": {
+        "mul": [
+          {
+            "baseline": "chroma"
+          },
+          {
+            "lerp": [
+              "intensity",
+              0.8,
+              1.4
+            ]
+          }
+        ]
+      },
+      "perStop": [
+        0,
+        0.02,
+        -0.01
+      ]
+    },
+    "seed": {
+      "deterministic": true,
+      "source": "controls.seed",
+      "prng": "mulberry32",
+      "note": "Algorithmic OKLCH biased to error reds/ambers: a narrow hueRange around a hot hueCenter keeps every fire inside the red/amber error band while still being generated (unique per fire)."
+    },
+    "perMood": {
+      "try-again": {
+        "hueCenter": 70,
+        "hueRange": 40,
+        "lightness": 0.78,
+        "chroma": 0.13
+      },
+      "error": {
+        "hueCenter": 40,
+        "hueRange": 36,
+        "lightness": 0.72,
+        "chroma": 0.17
+      },
+      "denied": {
+        "hueCenter": 22,
+        "hueRange": 30,
+        "lightness": 0.66,
+        "chroma": 0.21
+      }
+    }
+  },
+  "tempo": {
+    "durationMs": {
+      "from": {
+        "round": {
+          "mul": [
+            {
+              "baseline": "durationMs"
+            },
+            {
+              "lerp": [
+                "intensity",
+                1.15,
+                0.85
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "note": "Stamp + recoil/shake + collapse envelopes live in engine/tempo.ts (FAIL_STAMP_MS / stampProgress / failEnvelope / shakeOffset) — the negative, punchy counterpart to the held-breath success envelope."
+  },
+  "geometry": {
+    "kind": "radial",
+    "viewBox": [
+      0,
+      0,
+      100,
+      100
+    ],
+    "outlines": {
+      "cross": {
+        "role": "deny-glyph",
+        "source": "baked-sdf",
+        "note": "GEOMETRY SEAM: the ✗ icon is driven by this svgPath, baked to the inline SDF below (scripts/bake-sdf.mjs). The fail shader samples it (uSdfTex). Swap the path + re-bake to change the rejected icon with no shader edit. Two diagonal bars (a clean cross).",
+        "svgPath": "M 24 24 L 76 76 M 76 24 L 24 76",
+        "sdf": {
+          "size": 64,
+          "range": 18,
+          "viewBox": [
+            0,
+            0,
+            100,
+            100
+          ],
+          "data": "data:application/octet-stream;base64,RFMAQP/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////59PHw8vX6///////////////////////////////////69fLw8fT5/////////////////////////////vPq497b2tzf5e32//////////////////////////////bt5d/c2tve4+rz/v//////////////////////+Ovg1s7IxcTGytDY4+/8/////////////////////////O/j2NDKxsTFyM7W4Ov4////////////////////9ufZzcK5s6+usLS7xdDd6/r/////////////////////+uvd0MW7tLCur7O5ws3Z5/b/////////////////+OfXyLqupZ2ZmJqfp7G+zNvr+v//////////////////+uvbzL6xp5+amJmdpa66yNfn+P///////////////uvZyLepm5CIg4KEipOfrbzL2+v6////////////////+uvby7ytn5OKhIKDiJCbqbfI2ev+//////////////PgzbqpmIl9c21sbnaAjZ2svMvb6/r/////////////+uvby7ysnY2Adm5sbXN9iZipus3g8//////////////q1sKum4l5al9YVVlibn2Nnay8y9vr+v//////////+uvby7ysnY19bmJZVVhfanmJm67C1ur////////////54865pZB9alpMQj9ET15ufY2drLzL2+v6////////+uvby7ysnY19bl5PRD9CTFpqfZCluc7j+f//////////9N7Is52Ic19MOi0pMD9OXm59jZ2svMvb6/r/////+uvby7ysnY19bl5OPzApLTpMX3OInbPI3vT///////////Hbxa+Zg21YQi0bEx8vP05ebn2Nnay8y9vr+v//+uvby7ysnY19bl5OPy8fExstQlhtg5mvxdvx///////////w2sSumIJsVT8pEwAQHy8/Tl5ufY2drLzL2+v6+uvby7ysnY19bl5OPy8fEAATKT9VbIKYrsTa8P//////////8tzGsJqEbllEMB8QABAfLz9OXm59jZ2svMvb6+vby7ysnY19bl5OPy8fEAAQHzBEWW6EmrDG3PL///////////XfyrSfinZiTz8vHxAAEB8vP05ebn2Nnay8y9vby7ysnY19bl5OPy8fEAAQHy8/T2J2ip+0yt/1///////////65dC7p5OAbl5OPy8fEAAQHy8/Tl5ufY2drLzLy7ysnY19bl5OPy8fEAAQHy8/Tl5ugJOnu9Dl+v///////////+3YxbGfjX1uXk4/Lx8QABAfLz9OXm59jZ2svLysnY19bl5OPy8fEAAQHy8/Tl5ufY2fscXY7f/////////////249C+rZ2NfW5eTj8vHxAAEB8vP05ebn2NnaysnY19bl5OPy8fEAAQHy8/Tl5ufY2drb7Q4/b//////////////+/dzLysnY19bl5OPy8fEAAQHy8/Tl5ufY2dnY19bl5OPy8fEAAQHy8/Tl5ufY2drLzM3e/////////////////869vLvKydjX1uXk4/Lx8QABAfLz9OXm59jY19bl5OPy8fEAAQHy8/Tl5ufY2drLzL2+v8//////////////////rr28u8rJ2NfW5eTj8vHxAAEB8vP05ebn19bl5OPy8fEAAQHy8/Tl5ufY2drLzL2+v6////////////////////+uvby7ysnY19bl5OPy8fEAAQHy8/Tl5ubl5OPy8fEAAQHy8/Tl5ufY2drLzL2+v6///////////////////////669vLvKydjX1uXk4/Lx8QABAfLz9OXl5OPy8fEAAQHy8/Tl5ufY2drLzL2+v6//////////////////////////rr28u8rJ2NfW5eTj8vHxAAEB8vP05OPy8fEAAQHy8/Tl5ufY2drLzL2+v6////////////////////////////+uvby7ysnY19bl5OPy8fEAAQHy8/Py8fEAAQHy8/Tl5ufY2drLzL2+v6///////////////////////////////669vLvKydjX1uXk4/Lx8QABAfLy8fEAAQHy8/Tl5ufY2drLzL2+v6//////////////////////////////////rr28u8rJ2NfW5eTj8vHxAAEB8fEAAQHy8/Tl5ufY2drLzL2+v6////////////////////////////////////+uvby7ysnY19bl5OPy8fEAAQEAAQHy8/Tl5ufY2drLzL2+v6///////////////////////////////////////669vLvKydjX1uXk4/Lx8QAAAQHy8/Tl5ufY2drLzL2+v6////////////////////////////////////////+uvby7ysnY19bl5OPy8fEAAAEB8vP05ebn2Nnay8y9vr+v//////////////////////////////////////+uvby7ysnY19bl5OPy8fEAAQEAAQHy8/Tl5ufY2drLzL2+v6////////////////////////////////////+uvby7ysnY19bl5OPy8fEAAQHx8QABAfLz9OXm59jZ2svMvb6/r/////////////////////////////////+uvby7ysnY19bl5OPy8fEAAQHy8vHxAAEB8vP05ebn2Nnay8y9vr+v//////////////////////////////+uvby7ysnY19bl5OPy8fEAAQHy8/Py8fEAAQHy8/Tl5ufY2drLzL2+v6////////////////////////////+uvby7ysnY19bl5OPy8fEAAQHy8/Tk4/Lx8QABAfLz9OXm59jZ2svMvb6/r/////////////////////////+uvby7ysnY19bl5OPy8fEAAQHy8/Tl5eTj8vHxAAEB8vP05ebn2Nnay8y9vr+v//////////////////////+uvby7ysnY19bl5OPy8fEAAQHy8/Tl5ubl5OPy8fEAAQHy8/Tl5ufY2drLzL2+v6////////////////////+uvby7ysnY19bl5OPy8fEAAQHy8/Tl5ufX1uXk4/Lx8QABAfLz9OXm59jZ2svMvb6/r//////////////////Ovby7ysnY19bl5OPy8fEAAQHy8/Tl5ufY2NfW5eTj8vHxAAEB8vP05ebn2Nnay8y9vr/P///////////////+/dzLysnY19bl5OPy8fEAAQHy8/Tl5ufY2dnY19bl5OPy8fEAAQHy8/Tl5ufY2drLzM3e////////////////bj0L6tnY19bl5OPy8fEAAQHy8/Tl5ufY2drKydjX1uXk4/Lx8QABAfLz9OXm59jZ2tvtDj9v/////////////t2MWxn419bl5OPy8fEAAQHy8/Tl5ufY2drLy8rJ2NfW5eTj8vHxAAEB8vP05ebn2Nn7HF2O3////////////65dC7p5OAbl5OPy8fEAAQHy8/Tl5ufY2drLzLy7ysnY19bl5OPy8fEAAQHy8/Tl5ugJOnu9Dl+v//////////9d/KtJ+KdmJPPy8fEAAQHy8/Tl5ufY2drLzL29vLvKydjX1uXk4/Lx8QABAfLz9PYnaKn7TK3/X///////////LcxrCahG5ZRDAfEAAQHy8/Tl5ufY2drLzL2+vr28u8rJ2NfW5eTj8vHxAAEB8wRFluhJqwxtzy///////////w2sSumIJsVT8pEwAQHy8/Tl5ufY2drLzL2+v6+uvby7ysnY19bl5OPy8fEAATKT9VbIKYrsTa8P//////////8dvFr5mDbVhCLRsTHy8/Tl5ufY2drLzL2+v6///669vLvKydjX1uXk4/Lx8TGy1CWG2Dma/F2/H///////////TeyLOdiHNfTDotKTA/Tl5ufY2drLzL2+v6//////rr28u8rJ2NfW5eTj8wKS06TF9ziJ2zyN70///////////54865pZB9alpMQj9ET15ufY2drLzL2+v6////////+uvby7ysnY19bl5PRD9CTFpqfZCluc7j+f///////////+rWwq6biXlqX1hVWWJufY2drLzL2+v6///////////669vLvKydjX1uYllVWF9qeYmbrsLW6v/////////////z4M26qZiJfXNtbG52gI2drLzL2+v6//////////////rr28u8rJ2NgHZubG1zfYmYqbrN4PP//////////////uvZyLepm5CIg4KEipOfrbzL2+v6////////////////+uvby7ytn5OKhIKDiJCbqbfI2ev+///////////////459fIuq6lnZmYmp+nsb7M2+v6///////////////////669vMvrGnn5qYmZ2lrrrI1+f4//////////////////bn2c3CubOvrrC0u8XQ3ev6//////////////////////rr3dDFu7Swrq+zucLN2ef2////////////////////+Ovg1s7IxcTGytDY4+/8/////////////////////////O/j2NDKxsTFyM7W4Ov4///////////////////////+8+rj3tva3N/l7fb/////////////////////////////9u3l39za297j6vP+////////////////////////////+fTx8PL1+v//////////////////////////////////+vXy8PH0+f////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8="
+        }
+      }
+    }
+  },
+  "content": {
+    "note": "No word set for the fail effect — the ✗ cross is the whole message. Kept here for symmetry with the other effects' content blocks.",
+    "tokens": [
+      "✗"
+    ]
+  },
+  "render": {
+    "params": {
+      "exposure": {
+        "type": "float",
+        "from": {
+          "lerp": [
+            "intensity",
+            0.9,
+            1.6
+          ]
+        }
+      },
+      "severity": {
+        "type": "float",
+        "from": {
+          "control": "intensity"
+        }
+      },
+      "shakeAmount": {
+        "type": "float",
+        "from": {
+          "mul": [
+            {
+              "baseline": "shakeAmount"
+            },
+            {
+              "lerp": [
+                "intensity",
+                0.7,
+                1.3
+              ]
+            }
+          ]
+        }
+      },
+      "style": {
+        "type": "float",
+        "from": {
+          "control": "whimsy"
+        }
+      }
+    },
+    "backends": {
+      "webgl2": {
+        "stage": "fullscreen-triangle",
+        "blend": "screen",
+        "shader": {
+          "program": "fail"
+        }
+      }
+    },
+    "fallbackOrder": [
+      "webgl2"
+    ]
+  }
+}

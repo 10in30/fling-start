@@ -106,6 +106,39 @@ const EFFECTS = {
     // emitted into the web name-list only so list (c) stays a complete superset.
     samplers: ["uCheckTex", "uSdfTex"],
   },
+  fail: {
+    // Where the `.dope` lives + where to write the generated files.
+    dope: "swift/Sources/DopamineEffectFail/Resources/fail.dope.json",
+    swiftOut: "swift/Sources/DopamineEffectFail/FailUniforms.swift",
+    mslOut: "swift/Sources/DopamineEffectFail/Shaders/FailUniforms.metal",
+    // Web name-list kept OUT of the SwiftPM Sources tree (so it isn't an
+    // unhandled resource); it documents the GLSL `u<Name>` superset for the TS.
+    webOut: "swift/Generated/fail.uniforms.json",
+    // `render.params` that are NOT shader uniforms (web `bindings: null` /
+    // standard). `style` is the standard uStyle; `shakeAmount` feeds the shake
+    // math (the `frame()` hook), not a uniform (web `bindings: { shakeAmount: null }`).
+    // Excluded from the per-effect struct half.
+    excludeParams: ["style", "shakeAmount"],
+    // The web scatter key is `failSeed`, but it is null-bound (web
+    // `bindings: { failSeed: null }`) — the fail shader does NOT read a seed
+    // uniform — so it contributes NO struct field. The Swift `resolve()` still
+    // passes `scatterKey: "failSeed"` to `resolveDopeParams` for RNG parity; that
+    // is independent of this uniform-struct manifest.
+    scatterKey: null,
+    // Per-frame + host/texture-plumbing fields (filled by the config `frame()`
+    // hook and the Metal host, not the loader). Order is the struct tail.
+    extras: [
+      { name: "stamp", type: "float", web: "uStamp", note: "stampProgress(animMs)" },
+      { name: "shake", type: "float", web: "uShake", note: "signed recoil shake (-1..1)" },
+      { name: "sdfOn", type: "float", web: "uSdfOn", note: "1 = drive the cross from the baked SDF" },
+      { name: "sdfRangePx", type: "float", web: "uSdfRangePx", note: "device px mapping to the SDF 0..1 range" },
+      { name: "sdfStrokePx", type: "float", web: "uSdfStrokePx", note: "half stroke width (device px)" },
+      { name: "boxPx", type: "float", web: "uBoxPx", note: "half-size (device px) of the ✗ box" },
+    ],
+    // Sampler uniforms the shader declares (texture-bound, not in the struct);
+    // emitted into the web name-list only so list (c) stays a complete superset.
+    samplers: ["uSdfTex"],
+  },
 };
 
 // ---------------------------------------------------------------------------
