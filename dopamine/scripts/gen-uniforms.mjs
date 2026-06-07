@@ -106,6 +106,32 @@ const EFFECTS = {
     // emitted into the web name-list only so list (c) stays a complete superset.
     samplers: ["uCheckTex", "uSdfTex"],
   },
+  lightning: {
+    // Where the `.dope` lives + where to write the generated files.
+    dope: "swift/Sources/DopamineEffectLightning/Resources/lightning.dope.json",
+    swiftOut: "swift/Sources/DopamineEffectLightning/LightningUniforms.swift",
+    mslOut: "swift/Sources/DopamineEffectLightning/Shaders/LightningUniforms.metal",
+    // Web name-list kept OUT of the SwiftPM Sources tree (so it isn't an
+    // unhandled resource); it documents the GLSL `u<Name>` superset for the TS.
+    webOut: "swift/Generated/lightning.uniforms.json",
+    // `render.params` that are NOT shader uniforms (web `bindings: null` /
+    // standard / tempo). `style` is the standard uStyle; `overshoot` feeds the
+    // envelope; `flicker` feeds the flash/strobe shape (web `bindings: null`);
+    // `durationMs` is tempo. Excluded from the per-effect struct half.
+    excludeParams: ["style", "overshoot", "flicker", "durationMs"],
+    // A resolved param the shader reads, keyed off the seed (web: scatterKey,
+    // bound via `bindings: { boltSeed: "uSeed" }`). Appended after the
+    // .dope render.params, before the frame/plumbing extras.
+    scatterKey: "boltSeed",
+    // Per-frame fields (filled by the config `frame()` hook, not the loader):
+    // the strike crack-in progress + the flash/strobe amplitude. Struct tail.
+    extras: [
+      { name: "strike", type: "float", web: "uStrike", note: "strikeProgress(animMs)" },
+      { name: "flash", type: "float", web: "uFlash", note: "flashStrobe(life, flicker)" },
+    ],
+    // Lightning declares no sampler uniforms (no glyph/SDF textures).
+    samplers: [],
+  },
 };
 
 // ---------------------------------------------------------------------------
