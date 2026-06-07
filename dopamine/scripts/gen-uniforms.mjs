@@ -106,6 +106,42 @@ const EFFECTS = {
     // emitted into the web name-list only so list (c) stays a complete superset.
     samplers: ["uCheckTex", "uSdfTex"],
   },
+  heartburst: {
+    // Where the `.dope` lives + where to write the generated files.
+    dope: "swift/Sources/DopamineEffectHeartburst/Resources/heartburst.dope.json",
+    swiftOut: "swift/Sources/DopamineEffectHeartburst/HeartburstUniforms.swift",
+    mslOut: "swift/Sources/DopamineEffectHeartburst/Shaders/HeartburstUniforms.metal",
+    // Web name-list kept OUT of the SwiftPM Sources tree (so it isn't an
+    // unhandled resource); it documents the GLSL `u<Name>` superset for the TS.
+    webOut: "swift/Generated/heartburst.uniforms.json",
+    // `render.params` that are NOT shader uniforms (web `bindings: null` /
+    // standard / tempo). `style` is the standard uStyle; heartScale/burstCount/
+    // burstSpread/inkWeight/beatStrength/doubleBeat are DRAW-ONLY (Canvas2D panel
+    // geometry, never auto-bound); `dotSize` is null-bound but flows in as the
+    // dpr-scaled `uDotSize` host extra (passUniforms). Excluded from the struct half.
+    excludeParams: [
+      "style", "heartScale", "burstCount", "burstSpread",
+      "inkWeight", "beatStrength", "doubleBeat", "dotSize",
+    ],
+    // A resolved param the shader reads, keyed off the seed (web: scatterKey,
+    // bound via `bindings: { heartburstSeed: "uSeed" }`). Appended after the
+    // .dope render.params, before the frame/plumbing extras.
+    scatterKey: "heartburstSeed",
+    // Per-frame + host fields (filled by the config `frame()` hook and the Metal
+    // host, not the loader). presence/beat/burst/flash come from frame(); dotSize
+    // is the dpr-scaled halftone cell the host supplies (web passUniforms). Order
+    // is the struct tail.
+    extras: [
+      { name: "presence", type: "float", web: "uPresence", note: "panel opacity / presence 0..1" },
+      { name: "beat", type: "float", web: "uBeat", note: "0..1 current beat amplitude (lub-dub thump)" },
+      { name: "burst", type: "float", web: "uBurst", note: "0..1 burst progress (little hearts flying out)" },
+      { name: "flash", type: "float", web: "uFlash", note: "0..1 warm beat/burst flash amount" },
+      { name: "dotSize", type: "float", web: "uDotSize", note: "halftone cell size in device px (dpr-scaled)" },
+    ],
+    // Sampler uniforms the shader declares (texture-bound, not in the struct);
+    // emitted into the web name-list only so list (c) stays a complete superset.
+    samplers: ["uPanel"],
+  },
 };
 
 // ---------------------------------------------------------------------------
