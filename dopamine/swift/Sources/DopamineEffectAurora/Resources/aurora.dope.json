@@ -1,0 +1,98 @@
+{
+  "fmt": "dopamine-effect",
+  "v": "1.0.0",
+  "id": "dopamine.success.aurora",
+  "meta": {
+    "name": "Aurora",
+    "description": "Hanging curtains of polar light that drape across the upper field, sway and sweep, then gently brighten and fade.",
+    "tags": ["success", "ambient", "aurora", "directional", "curtain"]
+  },
+  "controls": {
+    "mood": { "type": "enum", "label": "Mood", "default": "serene", "options": ["serene", "celebratory", "electric"], "ui": "segmented" },
+    "intensity": { "type": "scalar", "label": "Intensity", "default": 0.7, "min": 0, "max": 1, "step": 0.01, "ui": "slider", "help": "Brightness, curtain coverage and band height." },
+    "whimsy": { "type": "scalar", "label": "Whimsy", "default": 0.4, "min": 0, "max": 1, "step": 0.01, "ui": "slider", "help": "Photoreal soft volumetric curtains (0) to stylized hard cel / posterized ribbons (1)." },
+    "seed": { "type": "int", "label": "Seed", "default": null, "nullable": true, "help": "Null = unique palette per fire; pin to reproduce." },
+    "target": { "type": "selector", "label": "Target", "default": "document.body" }
+  },
+  "baselines": {
+    "serene": {
+      "durationMs": 3200, "lightness": 0.86, "chroma": 0.1, "hueCenter": 168, "hueRange": 70,
+      "coverage": 0.55, "bandY": 0.66, "bandHeight": 0.28, "sway": 0.06, "striation": 0.6, "rays": 0.35, "overshoot": 0.4
+    },
+    "celebratory": {
+      "durationMs": 2600, "lightness": 0.85, "chroma": 0.16, "hueCenter": 190, "hueRange": 200,
+      "coverage": 0.7, "bandY": 0.64, "bandHeight": 0.31, "sway": 0.08, "striation": 0.72, "rays": 0.5, "overshoot": 0.7
+    },
+    "electric": {
+      "durationMs": 2100, "lightness": 0.84, "chroma": 0.23, "hueCenter": 320, "hueRange": 150,
+      "coverage": 0.85, "bandY": 0.62, "bandHeight": 0.34, "sway": 0.11, "striation": 0.88, "rays": 0.7, "overshoot": 1.0
+    }
+  },
+  "palette": {
+    "model": "oklch",
+    "space": "linear-srgb",
+    "generator": "golden-angle",
+    "goldenAngleDeg": 137.50776405003785,
+    "stops": 3,
+    "hueSpread": 0.22,
+    "lightness": { "baseline": "lightness", "perStop": [0.0, 0.06, -0.05] },
+    "chroma": {
+      "from": { "mul": [{ "baseline": "chroma" }, { "lerp": ["intensity", 0.7, 1.5] }] },
+      "perStop": [0.0, 0.02, -0.01]
+    },
+    "seed": { "deterministic": true, "source": "controls.seed", "prng": "mulberry32" },
+    "perMood": {
+      "serene": { "hueCenter": 165, "hueRange": 110, "lightness": 0.84, "chroma": 0.11 },
+      "celebratory": { "hueCenter": 200, "hueRange": 300, "lightness": 0.83, "chroma": 0.17 },
+      "electric": { "hueCenter": 320, "hueRange": 180, "lightness": 0.82, "chroma": 0.24 }
+    }
+  },
+  "tempo": {
+    "durationMs": {
+      "from": { "round": { "mul": [{ "baseline": "durationMs" }, { "lerp": ["intensity", 1.1, 0.9] }] } }
+    }
+  },
+  "geometry": {
+    "kind": "directional",
+    "viewBox": [0, 0, 100, 100]
+  },
+  "render": {
+    "params": {
+      "exposure": { "type": "float", "from": { "lerp": ["intensity", 0.85, 1.55] } },
+      "overshoot": {
+        "type": "float",
+        "from": { "mul": [{ "baseline": "overshoot" }, { "lerp": ["intensity", 0.7, 1.2] }] }
+      },
+      "coverage": {
+        "type": "float", "clamp01": true,
+        "from": { "mul": [{ "baseline": "coverage" }, { "lerp": ["intensity", 0.7, 1.25] }] }
+      },
+      "bandY": { "type": "float", "from": { "baseline": "bandY" } },
+      "bandHeight": {
+        "type": "float", "clamp01": true,
+        "from": { "mul": [{ "baseline": "bandHeight" }, { "lerp": ["intensity", 0.85, 1.15] }] }
+      },
+      "sway": {
+        "type": "float",
+        "from": { "mul": [{ "baseline": "sway" }, { "lerp": ["intensity", 0.85, 1.2] }] }
+      },
+      "striation": {
+        "type": "float", "clamp01": true,
+        "from": { "mul": [{ "baseline": "striation" }, { "lerp": ["whimsy", 0.9, 1.1] }] }
+      },
+      "rays": {
+        "type": "float", "clamp01": true,
+        "from": { "mul": [{ "baseline": "rays" }, { "lerp": ["intensity", 0.8, 1.2] }] }
+      },
+      "style": { "type": "float", "from": { "control": "whimsy" } }
+    },
+    "backends": {
+      "webgl2": {
+        "stage": "fullscreen-triangle",
+        "blend": "screen",
+        "shader": { "program": "aurora" }
+      }
+    },
+    "fallbackOrder": ["webgl2"]
+  }
+}

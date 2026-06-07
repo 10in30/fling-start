@@ -106,6 +106,30 @@ const EFFECTS = {
     // emitted into the web name-list only so list (c) stays a complete superset.
     samplers: ["uCheckTex", "uSdfTex"],
   },
+  aurora: {
+    // Where the `.dope` lives + where to write the generated files.
+    dope: "swift/Sources/DopamineEffectAurora/Resources/aurora.dope.json",
+    swiftOut: "swift/Sources/DopamineEffectAurora/AuroraUniforms.swift",
+    mslOut: "swift/Sources/DopamineEffectAurora/Shaders/AuroraUniforms.metal",
+    // Web name-list kept OUT of the SwiftPM Sources tree (so it isn't an
+    // unhandled resource); it documents the GLSL `u<Name>` superset for the TS.
+    webOut: "swift/Generated/aurora.uniforms.json",
+    // `render.params` that are NOT shader uniforms (web `bindings: null` /
+    // standard / tempo). `style` is the standard uStyle; `overshoot` feeds the
+    // envelope (web `bindings: { overshoot: null }`); `durationMs` is tempo.
+    // Excluded from the per-effect struct half.
+    excludeParams: ["style", "overshoot", "durationMs"],
+    // A resolved param the shader reads, keyed off the seed (web: scatterKey
+    // "auroraSeed", bound via `bindings: { auroraSeed: "uSeed" }`). Appended
+    // after the .dope render.params, before the frame extras.
+    scatterKey: "auroraSeed",
+    // Per-frame fields (filled by the config `frame()` hook, not the loader).
+    // Aurora has no texture plumbing: its only extra is the accumulated sideways
+    // sweep. Order is the struct tail.
+    extras: [
+      { name: "sweep", type: "float", web: "uSweep", note: "accumulated sideways sweep (fraction of width)" },
+    ],
+  },
 };
 
 // ---------------------------------------------------------------------------
