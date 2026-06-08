@@ -66,6 +66,22 @@ targets:
         product: DopamineCore
       - package: Dopamine
         product: DopamineEffectSolarbloom
+      - package: Dopamine
+        product: DopamineEffectAurora
+      - package: Dopamine
+        product: DopamineEffectComic
+      - package: Dopamine
+        product: DopamineEffectConfetti
+      - package: Dopamine
+        product: DopamineEffectFail
+      - package: Dopamine
+        product: DopamineEffectHeartburst
+      - package: Dopamine
+        product: DopamineEffectInkstroke
+      - package: Dopamine
+        product: DopamineEffectLightning
+      - package: Dopamine
+        product: DopamineEffectRipple
 
 schemes:
   DopamineDemo:

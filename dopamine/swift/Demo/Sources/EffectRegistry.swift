@@ -16,6 +16,14 @@ import QuartzCore
 import simd
 import DopamineCore
 import DopamineEffectSolarbloom
+import DopamineEffectAurora
+import DopamineEffectComic
+import DopamineEffectConfetti
+import DopamineEffectFail
+import DopamineEffectHeartburst
+import DopamineEffectInkstroke
+import DopamineEffectLightning
+import DopamineEffectRipple
 
 /// Type-erased overlay host. All members below are already public on
 /// `MetalOverlayHost<Config>`, so the conformance is empty.
@@ -50,14 +58,62 @@ enum EffectRegistry {
                   let fx = try? Solarbloom() else { return nil }
             return (host, { (try? fx.resolve($0)) ?? [:] })
         },
-        // === ported effects land here, one DemoEffect entry each, e.g.: ===
-        // DemoEffect(name: "aurora") { device in
-        //     guard let lib = try? device.makeDefaultLibrary(bundle: AuroraResources.bundle),
-        //           let host = try? MetalOverlayHost(config: AuroraConfig(), device: device,
-        //                                            library: lib, wantsShadow: false),
-        //           let fx = try? Aurora() else { return nil }
-        //     return (host, { (try? fx.resolve($0)) ?? [:] })
-        // },
+        DemoEffect(name: "aurora") { device in
+            guard let lib = try? device.makeDefaultLibrary(bundle: AuroraResources.bundle),
+                  let host = try? MetalOverlayHost(config: AuroraConfig(), device: device,
+                                                   library: lib, wantsShadow: false),
+                  let fx = try? Aurora() else { return nil }
+            return (host, { (try? fx.resolve($0)) ?? [:] })
+        },
+        DemoEffect(name: "comic") { device in
+            guard let lib = try? device.makeDefaultLibrary(bundle: ComicResources.bundle),
+                  let host = try? MetalOverlayHost(config: ComicConfig(), device: device,
+                                                   library: lib, wantsShadow: false),
+                  let fx = try? Comic() else { return nil }
+            return (host, { (try? fx.resolve($0)) ?? [:] })
+        },
+        DemoEffect(name: "confetti") { device in
+            guard let lib = try? device.makeDefaultLibrary(bundle: ConfettiResources.bundle),
+                  let host = try? MetalOverlayHost(config: ConfettiConfig(), device: device,
+                                                   library: lib, wantsShadow: false),
+                  let fx = try? Confetti() else { return nil }
+            return (host, { (try? fx.resolve($0)) ?? [:] })
+        },
+        DemoEffect(name: "fail") { device in
+            guard let lib = try? device.makeDefaultLibrary(bundle: FailResources.bundle),
+                  let host = try? MetalOverlayHost(config: FailConfig(), device: device,
+                                                   library: lib, wantsShadow: false),
+                  let fx = try? Fail() else { return nil }
+            return (host, { (try? fx.resolve($0)) ?? [:] })
+        },
+        DemoEffect(name: "heartburst") { device in
+            guard let lib = try? device.makeDefaultLibrary(bundle: HeartburstResources.bundle),
+                  let host = try? MetalOverlayHost(config: HeartburstConfig(), device: device,
+                                                   library: lib, wantsShadow: false),
+                  let fx = try? Heartburst() else { return nil }
+            return (host, { (try? fx.resolve($0)) ?? [:] })
+        },
+        DemoEffect(name: "inkstroke") { device in
+            guard let lib = try? device.makeDefaultLibrary(bundle: InkstrokeResources.bundle),
+                  let host = try? MetalOverlayHost(config: InkstrokeConfig(), device: device,
+                                                   library: lib, wantsShadow: false),
+                  let fx = try? Inkstroke() else { return nil }
+            return (host, { (try? fx.resolve($0)) ?? [:] })
+        },
+        DemoEffect(name: "lightning") { device in
+            guard let lib = try? device.makeDefaultLibrary(bundle: LightningResources.bundle),
+                  let host = try? MetalOverlayHost(config: LightningConfig(), device: device,
+                                                   library: lib, wantsShadow: false),
+                  let fx = try? Lightning() else { return nil }
+            return (host, { (try? fx.resolve($0)) ?? [:] })
+        },
+        DemoEffect(name: "ripple") { device in
+            guard let lib = try? device.makeDefaultLibrary(bundle: RippleResources.bundle),
+                  let host = try? MetalOverlayHost(config: RippleConfig(), device: device,
+                                                   library: lib, wantsShadow: false),
+                  let fx = try? Ripple() else { return nil }
+            return (host, { (try? fx.resolve($0)) ?? [:] })
+        },
     ]
 
     /// Resolve the autoplay request to an ordered effect list:

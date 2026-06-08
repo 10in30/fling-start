@@ -106,6 +106,232 @@ const EFFECTS = {
     // emitted into the web name-list only so list (c) stays a complete superset.
     samplers: ["uCheckTex", "uSdfTex"],
   },
+  aurora: {
+    // Where the `.dope` lives + where to write the generated files.
+    dope: "swift/Sources/DopamineEffectAurora/Resources/aurora.dope.json",
+    swiftOut: "swift/Sources/DopamineEffectAurora/AuroraUniforms.swift",
+    mslOut: "swift/Sources/DopamineEffectAurora/Shaders/AuroraUniforms.metal",
+    // Web name-list kept OUT of the SwiftPM Sources tree (so it isn't an
+    // unhandled resource); it documents the GLSL `u<Name>` superset for the TS.
+    webOut: "swift/Generated/aurora.uniforms.json",
+    // `render.params` that are NOT shader uniforms (web `bindings: null` /
+    // standard / tempo). `style` is the standard uStyle; `overshoot` feeds the
+    // envelope (web `bindings: { overshoot: null }`); `durationMs` is tempo.
+    // Excluded from the per-effect struct half.
+    excludeParams: ["style", "overshoot", "durationMs"],
+    // A resolved param the shader reads, keyed off the seed (web: scatterKey
+    // "auroraSeed", bound via `bindings: { auroraSeed: "uSeed" }`). Appended
+    // after the .dope render.params, before the frame extras.
+    scatterKey: "auroraSeed",
+    // Per-frame fields (filled by the config `frame()` hook, not the loader).
+    // Aurora has no texture plumbing: its only extra is the accumulated sideways
+    // sweep. Order is the struct tail.
+    extras: [
+      { name: "sweep", type: "float", web: "uSweep", note: "accumulated sideways sweep (fraction of width)" },
+    ],
+  },
+  comic: {
+    // Where the `.dope` lives + where to write the generated files.
+    dope: "swift/Sources/DopamineEffectComic/Resources/comic.dope.json",
+    swiftOut: "swift/Sources/DopamineEffectComic/ComicUniforms.swift",
+    mslOut: "swift/Sources/DopamineEffectComic/Shaders/ComicUniforms.metal",
+    // Web name-list kept OUT of the SwiftPM Sources tree (so it isn't an
+    // unhandled resource); it documents the GLSL `u<Name>` superset for the TS.
+    webOut: "swift/Generated/comic.uniforms.json",
+    // `render.params` that are NOT shader uniforms (web `bindings: null` /
+    // standard / tempo / draw-only). `style` is the standard uStyle; `overshoot`
+    // feeds the impact slam; `scale`/`burstPoints`/`inkWeight` are draw-only panel
+    // geometry (Canvas2D); `dotSize` is dpr-scaled host-side into uDotSize (not
+    // auto-bound). All match index.ts `bindings: { …: null }`. Excluded here.
+    excludeParams: ["style", "overshoot", "scale", "burstPoints", "inkWeight", "dotSize"],
+    // A resolved param the shader reads, keyed off the seed (web: scatterKey,
+    // bound via `bindings: { comicSeed: "uSeed" }`). Appended after the
+    // .dope render.params, before the frame/plumbing extras.
+    scatterKey: "comicSeed",
+    // Per-frame + host-plumbing fields (filled by the config `frame()` hook and
+    // the Metal host `passUniforms`, not the loader). Order is the struct tail.
+    // `presence`/`flash` come from frame(); `dotSize`/`inkBoost` are the
+    // dpr/style-scaled host extras (web passUniforms).
+    extras: [
+      { name: "presence", type: "float", web: "uPresence", note: "impactPresence(life)" },
+      { name: "flash", type: "float", web: "uFlash", note: "0..1 impact flash (fast spike, decays)" },
+      { name: "dotSize", type: "float", web: "uDotSize", note: "Ben-Day cell size (device px = dotSize*dpr)" },
+      { name: "inkBoost", type: "float", web: "uInkBoost", note: "ink darkness/spread (1 + style*0.4)" },
+    ],
+    // Sampler uniforms the shader declares (texture-bound, not in the struct);
+    // emitted into the web name-list only so list (c) stays a complete superset.
+    // The Canvas2D panel (word/burst/ink) texture is uploaded host-side.
+    samplers: ["uPanel"],
+  },
+  confetti: {
+    // Where the `.dope` lives + where to write the generated files.
+    dope: "swift/Sources/DopamineEffectConfetti/Resources/confetti.dope.json",
+    swiftOut: "swift/Sources/DopamineEffectConfetti/ConfettiUniforms.swift",
+    mslOut: "swift/Sources/DopamineEffectConfetti/Shaders/ConfettiUniforms.metal",
+    // Web name-list kept OUT of the SwiftPM Sources tree (so it isn't an
+    // unhandled resource); it documents the GLSL `u<Name>` superset for the TS.
+    webOut: "swift/Generated/confetti.uniforms.json",
+    // `render.params` that are NOT shader uniforms (web `bindings: null` /
+    // standard / tempo). `style` is the standard uStyle; `overshoot` feeds the
+    // launch-then-fall envelope; `durationMs` is tempo. Matches index.ts
+    // `bindings: { overshoot: null }` + the uniforms list omitting them.
+    excludeParams: ["style", "overshoot", "durationMs"],
+    // A resolved param the shader reads, keyed off the seed (web: scatterKey,
+    // bound via `bindings: { pieceSeed: "uPieceSeed" }`). Appended after the
+    // .dope render.params, before any frame/plumbing extras.
+    scatterKey: "pieceSeed",
+    // Confetti has no per-frame/host extras (no glyph/SDF texture plumbing — it
+    // is a pure particle field; the only time-varying value is `amp`, which is a
+    // standard uniform filled from frame()'s return).
+    extras: [],
+    // No texture samplers (no glyph/SDF).
+    samplers: [],
+  },
+  fail: {
+    // Where the `.dope` lives + where to write the generated files.
+    dope: "swift/Sources/DopamineEffectFail/Resources/fail.dope.json",
+    swiftOut: "swift/Sources/DopamineEffectFail/FailUniforms.swift",
+    mslOut: "swift/Sources/DopamineEffectFail/Shaders/FailUniforms.metal",
+    // Web name-list kept OUT of the SwiftPM Sources tree (so it isn't an
+    // unhandled resource); it documents the GLSL `u<Name>` superset for the TS.
+    webOut: "swift/Generated/fail.uniforms.json",
+    // `render.params` that are NOT shader uniforms (web `bindings: null` /
+    // standard). `style` is the standard uStyle; `shakeAmount` feeds the shake
+    // math (the `frame()` hook), not a uniform (web `bindings: { shakeAmount: null }`).
+    // Excluded from the per-effect struct half.
+    excludeParams: ["style", "shakeAmount"],
+    // The web scatter key is `failSeed`, but it is null-bound (web
+    // `bindings: { failSeed: null }`) — the fail shader does NOT read a seed
+    // uniform — so it contributes NO struct field. The Swift `resolve()` still
+    // passes `scatterKey: "failSeed"` to `resolveDopeParams` for RNG parity; that
+    // is independent of this uniform-struct manifest.
+    scatterKey: null,
+    // Per-frame + host/texture-plumbing fields (filled by the config `frame()`
+    // hook and the Metal host, not the loader). Order is the struct tail.
+    extras: [
+      { name: "stamp", type: "float", web: "uStamp", note: "stampProgress(animMs)" },
+      { name: "shake", type: "float", web: "uShake", note: "signed recoil shake (-1..1)" },
+      { name: "sdfOn", type: "float", web: "uSdfOn", note: "1 = drive the cross from the baked SDF" },
+      { name: "sdfRangePx", type: "float", web: "uSdfRangePx", note: "device px mapping to the SDF 0..1 range" },
+      { name: "sdfStrokePx", type: "float", web: "uSdfStrokePx", note: "half stroke width (device px)" },
+      { name: "boxPx", type: "float", web: "uBoxPx", note: "half-size (device px) of the ✗ box" },
+    ],
+    // Sampler uniforms the shader declares (texture-bound, not in the struct);
+    // emitted into the web name-list only so list (c) stays a complete superset.
+    samplers: ["uSdfTex"],
+  },
+  heartburst: {
+    // Where the `.dope` lives + where to write the generated files.
+    dope: "swift/Sources/DopamineEffectHeartburst/Resources/heartburst.dope.json",
+    swiftOut: "swift/Sources/DopamineEffectHeartburst/HeartburstUniforms.swift",
+    mslOut: "swift/Sources/DopamineEffectHeartburst/Shaders/HeartburstUniforms.metal",
+    // Web name-list kept OUT of the SwiftPM Sources tree (so it isn't an
+    // unhandled resource); it documents the GLSL `u<Name>` superset for the TS.
+    webOut: "swift/Generated/heartburst.uniforms.json",
+    // `render.params` that are NOT shader uniforms (web `bindings: null` /
+    // standard / tempo). `style` is the standard uStyle; heartScale/burstCount/
+    // burstSpread/inkWeight/beatStrength/doubleBeat are DRAW-ONLY (Canvas2D panel
+    // geometry, never auto-bound); `dotSize` is null-bound but flows in as the
+    // dpr-scaled `uDotSize` host extra (passUniforms). Excluded from the struct half.
+    excludeParams: [
+      "style", "heartScale", "burstCount", "burstSpread",
+      "inkWeight", "beatStrength", "doubleBeat", "dotSize",
+    ],
+    // A resolved param the shader reads, keyed off the seed (web: scatterKey,
+    // bound via `bindings: { heartburstSeed: "uSeed" }`). Appended after the
+    // .dope render.params, before the frame/plumbing extras.
+    scatterKey: "heartburstSeed",
+    // Per-frame + host fields (filled by the config `frame()` hook and the Metal
+    // host, not the loader). presence/beat/burst/flash come from frame(); dotSize
+    // is the dpr-scaled halftone cell the host supplies (web passUniforms). Order
+    // is the struct tail.
+    extras: [
+      { name: "presence", type: "float", web: "uPresence", note: "panel opacity / presence 0..1" },
+      { name: "beat", type: "float", web: "uBeat", note: "0..1 current beat amplitude (lub-dub thump)" },
+      { name: "burst", type: "float", web: "uBurst", note: "0..1 burst progress (little hearts flying out)" },
+      { name: "flash", type: "float", web: "uFlash", note: "0..1 warm beat/burst flash amount" },
+      { name: "dotSize", type: "float", web: "uDotSize", note: "halftone cell size in device px (dpr-scaled)" },
+    ],
+    // Sampler uniforms the shader declares (texture-bound, not in the struct);
+    // emitted into the web name-list only so list (c) stays a complete superset.
+    samplers: ["uPanel"],
+  },
+  inkstroke: {
+    // Where the `.dope` lives + where to write the generated files.
+    dope: "swift/Sources/DopamineEffectInkstroke/Resources/inkstroke.dope.json",
+    swiftOut: "swift/Sources/DopamineEffectInkstroke/InkstrokeUniforms.swift",
+    mslOut: "swift/Sources/DopamineEffectInkstroke/Shaders/InkstrokeUniforms.metal",
+    // Web name-list kept OUT of the SwiftPM Sources tree (so it isn't an
+    // unhandled resource); it documents the GLSL `u<Name>` superset for the TS.
+    webOut: "swift/Generated/inkstroke.uniforms.json",
+    // `render.params` that are NOT shader uniforms (web `bindings: null` /
+    // standard / tempo). `style` is the standard uStyle; `overshoot` feeds the
+    // envelope (web `bindings: { overshoot: null }`); `durationMs` is tempo.
+    excludeParams: ["style", "overshoot", "durationMs"],
+    // A resolved param the shader reads, keyed off the seed (web: scatterKey,
+    // bound via `bindings: { inkSeed: "uSeed" }` — the field is `inkSeed` but the
+    // GLSL name is `uSeed`). Appended after the .dope render.params, before the
+    // frame/plumbing extras.
+    scatterKey: "inkSeed",
+    scatterWeb: "uSeed",
+    // Per-frame fields (filled by the config `frame()` hook, not the loader).
+    // Inkstroke is fully analytic — no baked-SDF / glyph texture — so the only
+    // extra is the pen draw progress (web `frame()` returns `uDraw`).
+    extras: [
+      { name: "draw", type: "float", web: "uDraw", note: "strokeProgress(animMs) — pen draw 0..1" },
+    ],
+    // No sampler uniforms: the stroke is rendered analytically (no textures).
+    samplers: [],
+  },
+  lightning: {
+    // Where the `.dope` lives + where to write the generated files.
+    dope: "swift/Sources/DopamineEffectLightning/Resources/lightning.dope.json",
+    swiftOut: "swift/Sources/DopamineEffectLightning/LightningUniforms.swift",
+    mslOut: "swift/Sources/DopamineEffectLightning/Shaders/LightningUniforms.metal",
+    // Web name-list kept OUT of the SwiftPM Sources tree (so it isn't an
+    // unhandled resource); it documents the GLSL `u<Name>` superset for the TS.
+    webOut: "swift/Generated/lightning.uniforms.json",
+    // `render.params` that are NOT shader uniforms (web `bindings: null` /
+    // standard / tempo). `style` is the standard uStyle; `overshoot` feeds the
+    // envelope; `flicker` feeds the flash/strobe shape (web `bindings: null`);
+    // `durationMs` is tempo. Excluded from the per-effect struct half.
+    excludeParams: ["style", "overshoot", "flicker", "durationMs"],
+    // A resolved param the shader reads, keyed off the seed (web: scatterKey,
+    // bound via `bindings: { boltSeed: "uSeed" }`). Appended after the
+    // .dope render.params, before the frame/plumbing extras.
+    scatterKey: "boltSeed",
+    // Per-frame fields (filled by the config `frame()` hook, not the loader):
+    // the strike crack-in progress + the flash/strobe amplitude. Struct tail.
+    extras: [
+      { name: "strike", type: "float", web: "uStrike", note: "strikeProgress(animMs)" },
+      { name: "flash", type: "float", web: "uFlash", note: "flashStrobe(life, flicker)" },
+    ],
+    // Lightning declares no sampler uniforms (no glyph/SDF textures).
+    samplers: [],
+  },
+  ripple: {
+    // Where the `.dope` lives + where to write the generated files.
+    dope: "swift/Sources/DopamineEffectRipple/Resources/ripple.dope.json",
+    swiftOut: "swift/Sources/DopamineEffectRipple/RippleUniforms.swift",
+    mslOut: "swift/Sources/DopamineEffectRipple/Shaders/RippleUniforms.metal",
+    // Web name-list kept OUT of the SwiftPM Sources tree (so it isn't an
+    // unhandled resource); it documents the GLSL `u<Name>` superset for the TS.
+    webOut: "swift/Generated/ripple.uniforms.json",
+    // `render.params` that are NOT shader uniforms (web `bindings: null` /
+    // standard / tempo). `style` is the standard uStyle; `overshoot` feeds the
+    // envelope (web `bindings: { overshoot: null }`); `durationMs` is tempo.
+    excludeParams: ["style", "overshoot", "durationMs"],
+    // A resolved param the shader reads, keyed off the seed (web: scatterKey,
+    // bound via `bindings: { rippleSeed: "uSeed" }`). Appended after the .dope
+    // render.params, before any frame/plumbing extras.
+    scatterKey: "rippleSeed",
+    // Ripple has no per-frame extras: its global brightness is the generic
+    // held-breath envelope (fed to the shadow geometry), and it draws no
+    // checkmark / texture-bound layer. So the struct tail is empty.
+    extras: [],
+    // No sampler uniforms (Ripple is a pure analytic shader — no textures).
+    samplers: [],
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -139,8 +365,11 @@ function buildFields(dope, m) {
   }
 
   // (3) the scatter key (resolved, seed-keyed; the shader reads it by name).
+  // The struct field is `scatterKey`; the GLSL uniform name defaults to
+  // `u<ScatterKey>` but can be overridden by `scatterWeb` (e.g. inkstroke's
+  // `inkSeed` field binds to the GLSL `uSeed`).
   if (m.scatterKey) {
-    fields.push({ name: m.scatterKey, type: "float", web: cap(m.scatterKey), kind: "scatter" });
+    fields.push({ name: m.scatterKey, type: "float", web: m.scatterWeb ?? cap(m.scatterKey), kind: "scatter" });
   }
 
   // (4) per-frame + plumbing extras (filled by frame()/host, not the loader).

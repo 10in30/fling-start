@@ -1,0 +1,50 @@
+{
+  "_generated": "scripts/gen-uniforms.mjs — do not edit",
+  "effect": "ripple",
+  "standardUniforms": [
+    "uResolution",
+    "uOrigin",
+    "uLife",
+    "uTimeS",
+    "uStyle",
+    "uAmp",
+    "uC0",
+    "uC1",
+    "uC2",
+    "uShadow",
+    "uShadowOffset",
+    "uShadowSoft",
+    "uShadowStrength"
+  ],
+  "effectUniforms": [
+    "uExposure",
+    "uAmplitude",
+    "uRings",
+    "uWavelength",
+    "uSpeed",
+    "uCaustic",
+    "uRippleSeed"
+  ],
+  "allUniforms": [
+    "uResolution",
+    "uOrigin",
+    "uLife",
+    "uTimeS",
+    "uStyle",
+    "uAmp",
+    "uC0",
+    "uC1",
+    "uC2",
+    "uShadow",
+    "uShadowOffset",
+    "uShadowSoft",
+    "uShadowStrength",
+    "uExposure",
+    "uAmplitude",
+    "uRings",
+    "uWavelength",
+    "uSpeed",
+    "uCaustic",
+    "uRippleSeed"
+  ]
+}

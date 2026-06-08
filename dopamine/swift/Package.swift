@@ -28,6 +28,14 @@ let package = Package(
     products: [
         .library(name: "DopamineCore", targets: ["DopamineCore"]),
         .library(name: "DopamineEffectSolarbloom", targets: ["DopamineEffectSolarbloom"]),
+        .library(name: "DopamineEffectAurora", targets: ["DopamineEffectAurora"]),
+        .library(name: "DopamineEffectComic", targets: ["DopamineEffectComic"]),
+        .library(name: "DopamineEffectConfetti", targets: ["DopamineEffectConfetti"]),
+        .library(name: "DopamineEffectFail", targets: ["DopamineEffectFail"]),
+        .library(name: "DopamineEffectHeartburst", targets: ["DopamineEffectHeartburst"]),
+        .library(name: "DopamineEffectInkstroke", targets: ["DopamineEffectInkstroke"]),
+        .library(name: "DopamineEffectLightning", targets: ["DopamineEffectLightning"]),
+        .library(name: "DopamineEffectRipple", targets: ["DopamineEffectRipple"]),
     ],
     targets: [
         .target(
@@ -46,6 +54,70 @@ let package = Package(
                 // the .metal file is just an unbuilt resource; on macOS/iOS it is
                 // compiled into a `default.metallib` by the Swift build.
                 .copy("Resources/solarbloom.dope.json"),
+                .process("Shaders"),
+            ]
+        ),
+        .target(
+            name: "DopamineEffectAurora",
+            dependencies: ["DopamineCore"],
+            resources: [
+                .copy("Resources/aurora.dope.json"),
+                .process("Shaders"),
+            ]
+        ),
+        .target(
+            name: "DopamineEffectComic",
+            dependencies: ["DopamineCore"],
+            resources: [
+                .copy("Resources/comic.dope.json"),
+                .process("Shaders"),
+            ]
+        ),
+        .target(
+            name: "DopamineEffectConfetti",
+            dependencies: ["DopamineCore"],
+            resources: [
+                .copy("Resources/confetti.dope.json"),
+                .process("Shaders"),
+            ]
+        ),
+        .target(
+            name: "DopamineEffectFail",
+            dependencies: ["DopamineCore"],
+            resources: [
+                .copy("Resources/fail.dope.json"),
+                .process("Shaders"),
+            ]
+        ),
+        .target(
+            name: "DopamineEffectHeartburst",
+            dependencies: ["DopamineCore"],
+            resources: [
+                .copy("Resources/heartburst.dope.json"),
+                .process("Shaders"),
+            ]
+        ),
+        .target(
+            name: "DopamineEffectInkstroke",
+            dependencies: ["DopamineCore"],
+            resources: [
+                .copy("Resources/inkstroke.dope.json"),
+                .process("Shaders"),
+            ]
+        ),
+        .target(
+            name: "DopamineEffectLightning",
+            dependencies: ["DopamineCore"],
+            resources: [
+                .copy("Resources/lightning.dope.json"),
+                .process("Shaders"),
+            ]
+        ),
+        .target(
+            name: "DopamineEffectRipple",
+            dependencies: ["DopamineCore"],
+            resources: [
+                .copy("Resources/ripple.dope.json"),
                 .process("Shaders"),
             ]
         ),

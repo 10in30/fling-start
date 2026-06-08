@@ -1,0 +1,192 @@
+{
+  "fmt": "dopamine-effect",
+  "v": "1.0.0",
+  "id": "dopamine.boost.lightning",
+  "meta": {
+    "name": "Lightning",
+    "description": "A high-energy power-up / boost strike: a branching, fbm-perturbed electric arc cracks into the action point with a hard white flash, secondary forks, and a brief flicker afterglow. Electric OKLCH blues/violets to a hot white core.",
+    "tags": ["boost", "power-up", "electric", "lightning", "anchored"]
+  },
+  "controls": {
+    "mood": {
+      "type": "enum",
+      "label": "Mood",
+      "default": "electric",
+      "options": ["serene", "celebratory", "electric"],
+      "ui": "segmented"
+    },
+    "intensity": {
+      "type": "scalar",
+      "label": "Intensity",
+      "default": 0.85,
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "ui": "slider",
+      "help": "Bolt thickness, branch count, flash brightness."
+    },
+    "whimsy": {
+      "type": "scalar",
+      "label": "Whimsy",
+      "default": 0.5,
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "ui": "slider",
+      "help": "Photoreal plasma glow (0) to flat cel comic-book bolt + harder strobe (1)."
+    },
+    "seed": {
+      "type": "int",
+      "label": "Seed",
+      "default": null,
+      "nullable": true,
+      "help": "Null = unique bolt + palette per fire; pin to reproduce."
+    },
+    "origin": {
+      "type": "point",
+      "label": "Origin",
+      "default": "center"
+    },
+    "target": {
+      "type": "selector",
+      "label": "Target",
+      "default": "document.body"
+    }
+  },
+  "baselines": {
+    "serene": {
+      "durationMs": 1400,
+      "lightness": 0.82,
+      "chroma": 0.12,
+      "hueCenter": 245,
+      "hueRange": 60,
+      "thickness": 0.012,
+      "jagged": 0.55,
+      "branches": 0,
+      "flashBright": 0.5,
+      "flicker": 0.3,
+      "overshoot": 0.7
+    },
+    "celebratory": {
+      "durationMs": 1100,
+      "lightness": 0.8,
+      "chroma": 0.18,
+      "hueCenter": 228,
+      "hueRange": 110,
+      "thickness": 0.016,
+      "jagged": 0.85,
+      "branches": 3,
+      "flashBright": 0.8,
+      "flicker": 0.65,
+      "overshoot": 1.05
+    },
+    "electric": {
+      "durationMs": 850,
+      "lightness": 0.8,
+      "chroma": 0.24,
+      "hueCenter": 268,
+      "hueRange": 90,
+      "thickness": 0.02,
+      "jagged": 1.15,
+      "branches": 6,
+      "flashBright": 1.1,
+      "flicker": 1.0,
+      "overshoot": 1.5
+    }
+  },
+  "palette": {
+    "model": "oklch",
+    "space": "linear-srgb",
+    "generator": "golden-angle",
+    "goldenAngleDeg": 137.50776405003785,
+    "stops": 3,
+    "hueSpread": 0.4,
+    "lightness": {
+      "baseline": "lightness",
+      "perStop": [0.08, 0, -0.06]
+    },
+    "chroma": {
+      "from": {
+        "mul": [{ "baseline": "chroma" }, { "lerp": ["intensity", 0.7, 1.4] }]
+      },
+      "perStop": [-0.02, 0.02, 0.01]
+    },
+    "seed": {
+      "deterministic": true,
+      "source": "controls.seed",
+      "prng": "mulberry32"
+    },
+    "perMood": {
+      "serene": { "hueCenter": 245, "hueRange": 60, "lightness": 0.82, "chroma": 0.12 },
+      "celebratory": { "hueCenter": 228, "hueRange": 110, "lightness": 0.8, "chroma": 0.18 },
+      "electric": { "hueCenter": 268, "hueRange": 90, "lightness": 0.8, "chroma": 0.24 }
+    }
+  },
+  "tempo": {
+    "durationMs": {
+      "from": {
+        "round": {
+          "mul": [{ "baseline": "durationMs" }, { "lerp": ["intensity", 1.15, 0.9] }]
+        }
+      }
+    }
+  },
+  "render": {
+    "params": {
+      "exposure": {
+        "type": "float",
+        "from": { "lerp": ["intensity", 0.9, 1.6] }
+      },
+      "thickness": {
+        "type": "float",
+        "from": {
+          "mul": [{ "baseline": "thickness" }, { "lerp": ["intensity", 0.7, 1.35] }]
+        }
+      },
+      "jagged": {
+        "type": "float",
+        "from": {
+          "mul": [{ "baseline": "jagged" }, { "lerp": ["intensity", 0.8, 1.2] }]
+        }
+      },
+      "branches": {
+        "type": "int",
+        "clampMax": "MAX_FORKS",
+        "from": {
+          "round": {
+            "mul": [{ "baseline": "branches" }, { "lerp": ["intensity", 0.5, 1.25] }]
+          }
+        }
+      },
+      "flashBright": {
+        "type": "float",
+        "from": {
+          "mul": [{ "baseline": "flashBright" }, { "lerp": ["intensity", 0.6, 1.4] }]
+        }
+      },
+      "flicker": {
+        "type": "float",
+        "clamp01": true,
+        "from": { "baseline": "flicker" }
+      },
+      "overshoot": {
+        "type": "float",
+        "from": {
+          "mul": [{ "baseline": "overshoot" }, { "lerp": ["intensity", 0.7, 1.25] }]
+        }
+      },
+      "style": {
+        "type": "float",
+        "from": { "control": "whimsy" }
+      }
+    },
+    "backends": {
+      "webgl2": {
+        "stage": "fullscreen-triangle",
+        "blend": "screen",
+        "shader": { "program": "lightning" }
+      }
+    },
+    "fallbackOrder": ["webgl2"]
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "fmt": "dopamine-effect",
+  "v": "1.0.0",
+  "id": "dopamine.success.verdict",
+  "meta": {
+    "name": "Calligraphic Verdict",
+    "description": "A single confident ink/light signature stroke that writes itself across the frame.",
+    "tags": ["success", "ink", "directional"]
+  },
+  "controls": {
+    "mood": { "type": "enum", "label": "Mood", "default": "celebratory", "options": ["serene", "celebratory", "electric"], "ui": "segmented" },
+    "intensity": { "type": "scalar", "label": "Intensity", "default": 0.7, "min": 0, "max": 1, "step": 0.01, "ui": "slider", "help": "Saturation, brightness, gesture boldness, spray volume." },
+    "whimsy": { "type": "scalar", "label": "Whimsy", "default": 0.5, "min": 0, "max": 1, "step": 0.01, "ui": "slider", "help": "Wet sumi-e ink (0) to flat cel / neon slash (1)." },
+    "seed": { "type": "int", "label": "Seed", "default": null, "nullable": true, "help": "Null = unique palette per fire; pin to reproduce." },
+    "target": { "type": "selector", "label": "Target", "default": "document.body" }
+  },
+  "baselines": {
+    "serene": {
+      "durationMs": 2600, "lightness": 0.82, "chroma": 0.1, "hueCenter": 230, "hueRange": 120,
+      "scale": 0.62, "pressure": 1.05, "wetness": 0.95, "bristle": 0.25, "droplets": 10, "overshoot": 0.55
+    },
+    "celebratory": {
+      "durationMs": 1900, "lightness": 0.82, "chroma": 0.17, "hueCenter": 50, "hueRange": 320,
+      "scale": 0.72, "pressure": 1.25, "wetness": 0.65, "bristle": 0.5, "droplets": 30, "overshoot": 1.0
+    },
+    "electric": {
+      "durationMs": 1300, "lightness": 0.8, "chroma": 0.24, "hueCenter": 35, "hueRange": 150,
+      "scale": 0.82, "pressure": 1.45, "wetness": 0.4, "bristle": 0.9, "droplets": 52, "overshoot": 1.45
+    }
+  },
+  "palette": {
+    "model": "oklch",
+    "space": "linear-srgb",
+    "generator": "golden-angle",
+    "goldenAngleDeg": 137.50776405003785,
+    "stops": 3,
+    "hueSpread": 0.55,
+    "lightness": { "baseline": "lightness", "perStop": [0.0, 0.06, -0.05] },
+    "chroma": {
+      "from": { "mul": [{ "baseline": "chroma" }, { "lerp": ["intensity", 0.7, 1.5] }] },
+      "perStop": [0.0, 0.02, -0.01]
+    },
+    "seed": { "deterministic": true, "source": "controls.seed", "prng": "mulberry32" },
+    "perMood": {
+      "serene": { "hueCenter": 230, "hueRange": 120, "lightness": 0.82, "chroma": 0.1 },
+      "celebratory": { "hueCenter": 50, "hueRange": 320, "lightness": 0.82, "chroma": 0.17 },
+      "electric": { "hueCenter": 35, "hueRange": 150, "lightness": 0.8, "chroma": 0.24 }
+    }
+  },
+  "tempo": {
+    "durationMs": {
+      "from": { "round": { "mul": [{ "baseline": "durationMs" }, { "lerp": ["intensity", 1.1, 0.9] }] } }
+    }
+  },
+  "geometry": {
+    "kind": "directional",
+    "viewBox": [0, 0, 100, 100],
+    "outlines": {
+      "signature-stroke": { "role": "signature-stroke", "svgPath": "M 33 47 L 45 66 L 72 37" }
+    }
+  },
+  "render": {
+    "params": {
+      "exposure": { "type": "float", "from": { "lerp": ["intensity", 0.8, 1.55] } },
+      "overshoot": {
+        "type": "float",
+        "from": { "mul": [{ "baseline": "overshoot" }, { "lerp": ["intensity", 0.7, 1.25] }] }
+      },
+      "scale": {
+        "type": "float",
+        "from": { "mul": [{ "baseline": "scale" }, { "lerp": ["intensity", 0.9, 1.08] }] }
+      },
+      "pressure": {
+        "type": "float",
+        "from": { "mul": [{ "baseline": "pressure" }, { "lerp": ["intensity", 0.85, 1.2] }] }
+      },
+      "wetness": {
+        "type": "float", "clamp01": true,
+        "from": { "mul": [{ "baseline": "wetness" }, { "lerp": ["whimsy", 1.0, 0.35] }] }
+      },
+      "bristle": {
+        "type": "float", "clamp01": true,
+        "from": {
+          "mul": [
+            { "baseline": "bristle" },
+            { "lerp": ["whimsy", 0.85, 1.25] },
+            { "lerp": ["intensity", 0.9, 1.1] }
+          ]
+        }
+      },
+      "droplets": {
+        "type": "int", "clampMax": "MAX_DROPS",
+        "from": { "round": { "mul": [{ "baseline": "droplets" }, { "lerp": ["intensity", 0.7, 1.3] }] } }
+      },
+      "style": { "type": "float", "from": { "control": "whimsy" } }
+    },
+    "backends": {
+      "webgl2": {
+        "stage": "fullscreen-triangle",
+        "blend": "screen",
+        "shader": { "program": "inkstroke" }
+      }
+    },
+    "fallbackOrder": ["webgl2"]
+  }
+}
